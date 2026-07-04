@@ -6,8 +6,6 @@ import toast from 'react-hot-toast';
 
 export function useOtpFlow(onSuccess: () => void) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isPasswordMode, setIsPasswordMode] = useState(false);
   const [otpStep, setOtpStep] = useState<'email' | 'otp' | 'success'>('email');
   const [digits, setDigits] = useState<string[]>(Array(6).fill(''));
   const [countdown, setCountdown] = useState(0);
@@ -182,48 +180,10 @@ export function useOtpFlow(onSuccess: () => void) {
     }
   };
 
-  const loginWithPassword = async () => {
-    if (!email.trim() || !password.trim()) {
-      toast.error('Please enter email and password');
-      return;
-    }
-    setIsSubmitting(true);
-    setErrorMsg(null);
-    setShouldShake(false);
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        setShouldShake(true);
-        setErrorMsg('Invalid email or password');
-        toast.error('Invalid email or password');
-        setIsSubmitting(false);
-        setTimeout(() => setShouldShake(false), 400);
-        return;
-      }
-
-      setOtpStep('success');
-      toast.success('Access Granted!');
-      setTimeout(() => {
-        onSuccess();
-      }, 600);
-    } catch (err) {
-      console.error(err);
-      setShouldShake(true);
-      setErrorMsg('Login failed');
-      setTimeout(() => setShouldShake(false), 400);
-      setIsSubmitting(false);
-    }
-  };
 
   const resetFlow = () => {
     setEmail('');
-    setPassword('');
-    setIsPasswordMode(false);
     setOtpStep('email');
     setDigits(Array(6).fill(''));
     setErrorMsg(null);
@@ -234,10 +194,6 @@ export function useOtpFlow(onSuccess: () => void) {
   return {
     email,
     setEmail,
-    password,
-    setPassword,
-    isPasswordMode,
-    setIsPasswordMode,
     otpStep,
     setOtpStep,
     digits,
@@ -248,7 +204,6 @@ export function useOtpFlow(onSuccess: () => void) {
     sendOtp,
     resendOtp,
     verifyOtp: () => verifyOtp(digits),
-    loginWithPassword,
     handleDigitChange,
     handleKeyDown,
     handlePaste,

@@ -18,10 +18,6 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
   const {
     email,
     setEmail,
-    password,
-    setPassword,
-    isPasswordMode,
-    setIsPasswordMode,
     otpStep,
     digits,
     countdown,
@@ -31,7 +27,6 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
     sendOtp,
     resendOtp,
     verifyOtp,
-    loginWithPassword,
     handleDigitChange,
     handleKeyDown,
     handlePaste,
@@ -103,7 +98,7 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
               <div>
                 <h2 className="text-xl font-bold font-display text-text-primary">Admin Access</h2>
                 <p className="text-sm text-text-tertiary mt-1">
-                  {isPasswordMode ? 'Enter credentials to access CMS' : 'Enter your email to receive a 6-digit code'}
+                  Enter your email to receive a 6-digit code
                 </p>
               </div>
 
@@ -114,40 +109,19 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
                     placeholder="admin@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && (isPasswordMode ? loginWithPassword() : sendOtp(email))}
+                    onKeyDown={(e) => e.key === 'Enter' && sendOtp(email)}
                     disabled={isSubmitting}
                     className="text-center font-medium"
                   />
-                  {isPasswordMode && (
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && loginWithPassword()}
-                      disabled={isSubmitting}
-                      className="text-center font-medium"
-                    />
-                  )}
                 </div>
 
                 <Button
-                  onClick={() => (isPasswordMode ? loginWithPassword() : sendOtp(email))}
-                  disabled={isSubmitting || !email || (isPasswordMode && !password)}
+                  onClick={() => sendOtp(email)}
+                  disabled={isSubmitting || !email}
                   className="w-full justify-center"
                 >
-                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : (isPasswordMode ? 'Log In' : 'Send Code →')}
+                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Send Code →'}
                 </Button>
-
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsPasswordMode(!isPasswordMode)}
-                    className="text-xs font-semibold text-accent-primary hover:underline cursor-pointer"
-                  >
-                    {isPasswordMode ? 'Use OTP code instead' : 'Log in with password instead'}
-                  </button>
-                </div>
               </div>
             </motion.div>
           )}
