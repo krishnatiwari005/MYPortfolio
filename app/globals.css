@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #FAFAFA;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-glass: rgba(255, 255, 255, 0.70);
+  --color-bg-glass-border: rgba(255, 255, 255, 0.85);
+  --color-text-primary: #0D0D0D;
+  --color-text-secondary: #3D3D3D;
+  --color-text-tertiary: #717171;
+  --color-accent-primary: #4F46E5;
+  --color-accent-hover: #4338CA;
+  --color-accent-light: #EEF2FF;
+  --color-accent-glow: rgba(79, 70, 229, 0.15);
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-border-default: rgba(0, 0, 0, 0.10);
+
+  --font-display: 'Clash Display Variable', 'Inter', system-ui;
+  --font-body: 'Inter', system-ui;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --shadow-float: 0 24px 48px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 40px rgba(79, 70, 229, 0.12);
+}
+
+:root {
+  --gradient-hero: linear-gradient(135deg, #F0F4FF 0%, #FAF5FF 50%, #F0FDF4 100%);
+  --gradient-accent: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  --gradient-text: linear-gradient(135deg, #4F46E5, #7C3AED);
+
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+
+/* Base Body Styles */
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Glassmorphism utility */
+.glass-card {
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+/* Mouse follow glow pseudo-element */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle 400px at var(--mouse-x) var(--mouse-y), rgba(79, 70, 229, 0.06), transparent 100%);
+}
+
+/* Background Drifting Orbs Animations */
+@keyframes drift-indigo {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(40px, -60px) scale(1.1); }
+  66% { transform: translate(-30px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes drift-purple {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(-50px, 40px) scale(0.95); }
+  66% { transform: translate(30px, -30px) scale(1.05); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes drift-emerald {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, 30px) scale(1.05); }
+  66% { transform: translate(-20px, -40px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.orb-indigo {
+  animation: drift-indigo 25s infinite ease-in-out;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0) 70%);
+}
+
+.orb-purple {
+  animation: drift-purple 28s infinite ease-in-out;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, rgba(124, 58, 237, 0) 70%);
+}
+
+.orb-emerald {
+  animation: drift-emerald 22s infinite ease-in-out;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0) 70%);
+}
+
+/* TipTap Editor Styling Reset */
+.ProseMirror {
+  outline: none;
+  min-height: 150px;
+}
+.ProseMirror p {
+  margin-bottom: 0.5rem;
+}
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+/* Custom Scroll Timeline replacement indicator styles */
+.scroll-line-progress {
+  transform-origin: top;
+}
+
+/* Hide scrollbar default styles for horizontal scrolls */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
