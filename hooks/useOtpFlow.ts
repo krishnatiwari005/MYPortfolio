@@ -24,6 +24,7 @@ export function useOtpFlow(onSuccess: () => void) {
     return () => clearInterval(timer);
   }, [countdown]);
 
+  // ─── Send OTP via our custom API (Gmail → 6-digit code) ───────────────────
   const sendOtp = async (targetEmail: string) => {
     if (!targetEmail.trim()) {
       toast.error('Please enter an email address');
@@ -33,27 +34,29 @@ export function useOtpFlow(onSuccess: () => void) {
     setErrorMsg(null);
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: targetEmail,
-        options: {
-          shouldCreateUser: false, // Ensure only pre-added users can request codes
-        },
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: targetEmail.trim().toLowerCase() }),
       });
 
-      if (error) {
-        // Typically throws if user doesn't exist under shouldCreateUser: false
-        setErrorMsg('Email not authorized');
-        toast.error('Email not authorized');
+      const data = await res.json();
+
+      if (!res.ok) {
+        const msg = data?.error ?? 'Failed to send code';
+        setErrorMsg(msg);
+        toast.error(msg);
         setIsSubmitting(false);
         return;
       }
 
       setOtpStep('otp');
-      setCountdown(30);
+      setCountdown(60); // 60 second resend cooldown
       setDigits(Array(6).fill(''));
+      toast.success('6-digit code sent to your email!');
     } catch (err) {
       console.error(err);
-      setErrorMsg('Failed to send verification code');
+      setErrorMsg('Failed to send verification code. Check your connection.');
       toast.error('Failed to send verification code');
     } finally {
       setIsSubmitting(false);
@@ -65,6 +68,7 @@ export function useOtpFlow(onSuccess: () => void) {
     await sendOtp(email);
   };
 
+  // ─── Verify OTP via our custom API ────────────────────────────────────────
   const verifyOtp = useCallback(async (otpDigits: string[]) => {
     const code = otpDigits.join('');
     if (code.length !== 6) return;
@@ -74,32 +78,51 @@ export function useOtpFlow(onSuccess: () => void) {
     setShouldShake(false);
 
     try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: 'email',
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), code }),
       });
 
-      if (error) {
+      const data = await res.json();
+
+      if (!res.ok) {
         setShouldShake(true);
-        setErrorMsg('Incorrect code, please try again');
-        toast.error('Incorrect code, please try again');
+        const msg = data?.error ?? 'Incorrect code, please try again';
+        setErrorMsg(msg);
+        toast.error(msg);
         setDigits(Array(6).fill(''));
         setIsSubmitting(false);
-        // Clear shake status after animation finishes
+        setTimeout(() => setShouldShake(false), 400);
+        return;
+      }
+
+      // ── Use the token hash from our server to establish a real Supabase session ──
+      const { error: sessionError } = await supabase.auth.verifyOtp({
+        token_hash: data.tokenHash,
+        type: 'magiclink',
+      });
+
+      if (sessionError) {
+        console.error('[verifyOtp] session error:', sessionError);
+        setShouldShake(true);
+        setErrorMsg('Session creation failed. Try again.');
+        toast.error('Session creation failed. Try again.');
+        setDigits(Array(6).fill(''));
+        setIsSubmitting(false);
         setTimeout(() => setShouldShake(false), 400);
         return;
       }
 
       setOtpStep('success');
-      toast.success('Access Granted!');
+      toast.success('Access Granted! Welcome back 🎉');
       setTimeout(() => {
         onSuccess();
       }, 600);
     } catch (err) {
       console.error(err);
       setShouldShake(true);
-      setErrorMsg('Verification failed');
+      setErrorMsg('Verification failed. Please try again.');
       setTimeout(() => setShouldShake(false), 400);
       setIsSubmitting(false);
     }

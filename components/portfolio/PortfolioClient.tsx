@@ -44,9 +44,16 @@ export default function PortfolioClient({
   resume,
   settings,
 }: PortfolioClientProps) {
-  const { isAdmin, logout } = useAdminAuth();
+  const { isAdmin, loading, logout } = useAdminAuth();
   const [panelOpen, setPanelOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+
+  // Close the admin panel immediately if the user loses auth (e.g. session expires)
+  useEffect(() => {
+    if (!isAdmin && panelOpen) {
+      setPanelOpen(false);
+    }
+  }, [isAdmin]);
 
   // Mouse Follow Glow Effect Listener
   useEffect(() => {
@@ -101,13 +108,22 @@ export default function PortfolioClient({
         <Footer hero={hero} settings={settings} />
       </motion.div>
 
-      {/* Admin Control Widgets */}
-      <LockButton
-        isAdmin={isAdmin}
-        panelOpen={panelOpen}
-        onTogglePanel={() => setPanelOpen((prev) => !prev)}
-        onOpenLogin={() => setLoginOpen(true)}
-      />
+      {/* Admin Control Widgets — hidden while auth is being checked */}
+      {!loading && (
+        <LockButton
+          isAdmin={isAdmin}
+          panelOpen={panelOpen}
+          onTogglePanel={() => {
+            // Only allow opening the panel if actually authenticated
+            if (isAdmin) {
+              setPanelOpen((prev) => !prev);
+            } else {
+              setLoginOpen(true);
+            }
+          }}
+          onOpenLogin={() => setLoginOpen(true)}
+        />
+      )}
 
       <OtpModal
         isOpen={loginOpen}
@@ -118,14 +134,17 @@ export default function PortfolioClient({
         }}
       />
 
-      <AdminPanel
-        isOpen={panelOpen}
-        onClose={() => setPanelOpen(false)}
-        onLogout={() => {
-          logout();
-          setPanelOpen(false);
-        }}
-      />
+      {/* Admin Panel — only renders when authenticated */}
+      {isAdmin && (
+        <AdminPanel
+          isOpen={panelOpen}
+          onClose={() => setPanelOpen(false)}
+          onLogout={() => {
+            logout();
+            setPanelOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

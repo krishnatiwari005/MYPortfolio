@@ -22,11 +22,13 @@ export function useAdminAuth() {
 
     checkSession();
 
-    // Subscribe to auth changes
+    // Subscribe to all auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        setIsAdmin(true);
+      // Grant access on sign in and token refresh (session renewal)
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+        setIsAdmin(!!session);
       } else if (event === 'SIGNED_OUT') {
+        // Always revoke access on sign out
         setIsAdmin(false);
       }
     });
