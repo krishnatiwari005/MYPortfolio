@@ -9,6 +9,7 @@ import FloatingNav from './FloatingNav';
 import HeroSection from './Hero';
 import AboutSection from './About';
 import SkillsSection from './Skills';
+import Contributions from './Contributions';
 import ExperienceSection from './Experience';
 import ProjectsSection from './Projects';
 import CertificatesSection from './Certificates';
@@ -86,7 +87,7 @@ export default function PortfolioClient({
       <div className="fixed top-1/2 right-0 w-[300px] h-[300px] rounded-full orb-emerald z-0 pointer-events-none translate-x-1/2 -translate-y-1/2" />
 
       {/* Floating Navigation Header */}
-      <FloatingNav initials={initials} logoUrl={hero?.photo_url || undefined} onHireMeClick={handleHireMeClick} />
+      <FloatingNav initials={initials} logoUrl={hero?.photo_url || undefined} onHireMeClick={handleHireMeClick} panelOpen={panelOpen} />
 
       {/* Main Content Area: dynamically scales down width on desktop when panel is open */}
       <motion.div
@@ -105,6 +106,7 @@ export default function PortfolioClient({
         <CertificatesSection certificates={certificates} />
         <ResumeSection data={resume} />
         <ContactSection data={hero} />
+        <Contributions hero={hero} />
         <Footer hero={hero} settings={settings} />
       </motion.div>
 

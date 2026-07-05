@@ -1,6 +1,7 @@
 // Cache-bust comment: 2026-07-05-01
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import QueryProvider from '@/components/shared/QueryProvider';
 import { Toaster } from 'react-hot-toast';
@@ -48,27 +49,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable}`}>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                  if (registrations.length > 0) {
-                    Promise.all(registrations.map(function(r) { return r.unregister(); })).then(function() {
-                      window.location.reload();
-                    });
-                  }
+      <body className="antialiased min-h-screen">
+        <Script id="sw-cleanup" strategy="afterInteractive">{`
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              if (registrations.length > 0) {
+                Promise.all(registrations.map(function(r) { return r.unregister(); })).then(function() {
+                  window.location.reload();
                 });
               }
-            `
-          }}
-        />
-      </head>
-      <body className="antialiased min-h-screen">
+            });
+          }
+        `}</Script>
         <QueryProvider>
           {children}
-          {/* Custom style Toast notification portal */}
           <Toaster
             position="bottom-right"
             toastOptions={{
