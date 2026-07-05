@@ -6,10 +6,11 @@ import { cn } from '@/lib/utils';
 
 export interface FloatingNavProps {
   initials?: string;
+  logoUrl?: string;
   onHireMeClick: () => void;
 }
 
-export const FloatingNav = ({ initials = 'JD', onHireMeClick }: FloatingNavProps) => {
+export const FloatingNav = ({ initials = 'JD', logoUrl, onHireMeClick }: FloatingNavProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
@@ -77,12 +78,16 @@ export const FloatingNav = ({ initials = 'JD', onHireMeClick }: FloatingNavProps
           : 'bg-transparent border-transparent shadow-none'
       )}
     >
-      {/* Initials Circle */}
+      {/* Initials/Logo Circle */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="w-8 h-8 rounded-full bg-gradient-to-r from-accent-primary to-[#7C3AED] text-white flex items-center justify-center text-xs font-black font-display tracking-tight shadow-sm shrink-0 cursor-pointer"
+        className="w-8 h-8 rounded-full bg-gradient-to-r from-accent-primary to-[#7C3AED] text-white flex items-center justify-center text-xs font-black font-display tracking-tight shadow-sm shrink-0 cursor-pointer overflow-hidden"
       >
-        {initials}
+        {logoUrl ? (
+          <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+        ) : (
+          initials
+        )}
       </button>
 
       {/* Nav Link Checklist */}
