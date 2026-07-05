@@ -34,7 +34,16 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
           <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-[2px] bg-accent-primary/10 -translate-x-1/2" />
 
           <div className="space-y-12">
-            {experiences.map((exp, idx) => {
+            {[...experiences].sort((a, b) => {
+              if (a.is_current && !b.is_current) return -1;
+              if (!a.is_current && b.is_current) return 1;
+              const dateA = new Date(`${a.start_month} 1, ${a.start_year}`);
+              const dateB = new Date(`${b.start_month} 1, ${b.start_year}`);
+              if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+                return a.display_order - b.display_order;
+              }
+              return dateB.getTime() - dateA.getTime();
+            }).map((exp, idx) => {
               const isEven = idx % 2 === 0;
 
               return (
@@ -46,15 +55,8 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                   <div className="absolute left-[20px] md:left-1/2 top-6 w-3.5 h-3.5 rounded-full bg-white border-2 border-accent-primary -translate-x-1/2 z-10 shadow-sm" />
 
                   {/* Desktop Layout left offset spacer */}
-                  <div className={`hidden md:block w-1/2 pr-12 text-right ${isEven ? 'order-1' : 'order-2'}`}>
-                    {!isEven && (
-                      <div className="pt-5 sticky top-24">
-                        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-accent-light border border-accent-primary/20 text-accent-primary text-xs font-bold rounded-full shadow-sm">
-                          <Calendar className="w-3.5 h-3.5" />
-                          {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`}
-                        </span>
-                      </div>
-                    )}
+                  <div className={`hidden md:block w-1/2 ${isEven ? 'pr-12 text-right order-1' : 'pl-12 text-left order-2'}`}>
+                    {/* Spacer remains empty, date pills are attached to the card */}
                   </div>
 
                   {/* Desktop Layout right offset content */}
@@ -63,7 +65,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-80px' }}
                     transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                    className={`w-full md:w-1/2 pl-10 md:pl-12 ${isEven ? 'order-2' : 'order-1'}`}
+                    className={`w-full md:w-1/2 ${isEven ? 'pl-10 md:pl-12 order-2' : 'pr-10 md:pr-12 order-1'}`}
                   >
                     {/* Mobile Time Frame above card */}
                     <div className="md:hidden mb-3">
@@ -74,15 +76,13 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     </div>
 
                     <Card glass className="p-6 rounded-2xl relative">
-                      {/* Even Index Desktop Date Pill */}
-                      {isEven && (
-                        <div className="hidden md:block absolute right-full top-5 mr-12 pr-0.5">
-                          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-accent-light border border-accent-primary/20 text-accent-primary text-xs font-bold rounded-full shadow-sm whitespace-nowrap">
-                            <Calendar className="w-3.5 h-3.5" />
-                            {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`}
-                          </span>
-                        </div>
-                      )}
+                      {/* Desktop Date Pills */}
+                      <div className={`hidden md:block absolute top-5 whitespace-nowrap ${isEven ? 'right-full mr-12 pr-0.5' : 'left-full ml-12 pl-0.5'}`}>
+                        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-accent-light border border-accent-primary/20 text-accent-primary text-xs font-bold rounded-full shadow-sm">
+                          <Calendar className="w-3.5 h-3.5" />
+                          {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`}
+                        </span>
+                      </div>
 
                       {/* Header block */}
                       <div className="flex items-center gap-3.5 border-b border-border-subtle pb-4 mb-4">
