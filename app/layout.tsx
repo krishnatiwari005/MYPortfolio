@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/components/shared/QueryProvider';
 import { Toaster } from 'react-hot-toast';
-import { getSeoSettings } from '@/lib/supabase/queries';
+import { getSeoSettings, getHero } from '@/lib/supabase/queries';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -14,6 +14,7 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const seo = await getSeoSettings();
+    const hero = await getHero();
     if (!seo) throw new Error();
 
     return {
@@ -29,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
         images: seo.twitter_image_url ? [seo.twitter_image_url] : [],
       },
       icons: {
-        icon: seo.favicon_url ?? '/favicon.ico',
+        icon: seo.favicon_url ?? hero?.photo_url ?? '/favicon.ico',
       },
     };
   } catch {

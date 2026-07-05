@@ -86,7 +86,7 @@ export default function PortfolioClient({
       <div className="fixed top-1/2 right-0 w-[300px] h-[300px] rounded-full orb-emerald z-0 pointer-events-none translate-x-1/2 -translate-y-1/2" />
 
       {/* Floating Navigation Header */}
-      <FloatingNav initials={initials} logoUrl="/logo.png" onHireMeClick={handleHireMeClick} />
+      <FloatingNav initials={initials} logoUrl={hero?.photo_url || undefined} onHireMeClick={handleHireMeClick} />
 
       {/* Main Content Area: dynamically scales down width on desktop when panel is open */}
       <motion.div

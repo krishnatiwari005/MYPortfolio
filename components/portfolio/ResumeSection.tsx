@@ -17,8 +17,8 @@ export const ResumeSection = ({ data }: ResumeSectionProps) => {
   if (!data) return null;
 
   return (
-    <section id="resume-section" className="py-24 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12">
+    <section id="resume-section" className="py-12 md:py-16 relative z-10 scroll-mt-12">
+      <div className="w-full max-w-[900px] mx-auto px-6 md:px-12 space-y-8 md:space-y-12">
         <Card
           glass
           className="p-8 md:p-12 rounded-[28px] overflow-hidden flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 border-accent-primary/10 relative"

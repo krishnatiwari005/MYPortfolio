@@ -41,8 +41,8 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
   };
 
   return (
-    <section id="skills" className="py-24 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-12">
+    <section id="skills" className="py-12 md:py-16 relative z-10 scroll-mt-12">
+      <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-8 md:space-y-12">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center space-y-3">
           <div className="px-3 py-1 bg-accent-light border border-accent-primary/10 text-accent-primary text-xs font-bold tracking-widest uppercase rounded-full">

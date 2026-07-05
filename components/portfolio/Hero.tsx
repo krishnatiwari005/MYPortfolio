@@ -52,7 +52,7 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center pt-28 pb-16 relative z-10">
+    <section className="flex items-center justify-center pt-32 pb-12 relative z-10">
       <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
         {/* Left Column (Main Intro) */}
         <motion.div
@@ -111,7 +111,7 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
           </motion.div>
         </motion.div>
 
-        {/* Right Column (Floating Glass Card) */}
+        {/* Right Column (Profile Photo & Stats) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -121,49 +121,48 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="glass-card rounded-[28px] p-8 shadow-float relative overflow-hidden"
+            className="relative flex flex-col items-center text-center space-y-6"
           >
             {/* Background Accent glow */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-accent-primary/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-accent-primary/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="flex flex-col items-center text-center space-y-5">
-              {/* Profile Photo */}
-              <div className="w-32 h-32 rounded-full overflow-hidden border-[3px] border-white shadow-md relative bg-white shrink-0">
-                {data?.photo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={data.photo_url}
-                    alt={name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-accent-light flex items-center justify-center text-accent-primary font-bold text-3xl font-display">
-                    {name.split(' ').map((n) => n[0]).join('')}
-                  </div>
-                )}
+            {/* Profile Photo */}
+            <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden border-4 border-white shadow-2xl relative bg-white shrink-0 z-10">
+              {data?.photo_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={data.photo_url}
+                  alt={name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-accent-light flex items-center justify-center text-accent-primary font-bold text-5xl font-display">
+                  {name.split(' ').map((n) => n[0]).join('')}
+                </div>
+              )}
+            </div>
+
+            {/* Availability Badge */}
+            {available && (
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50/80 backdrop-blur-md border border-emerald-200/50 rounded-full shadow-sm z-10">
+                <span className="w-2.5 h-2.5 rounded-full bg-success animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                <span className="text-xs font-bold text-emerald-800 tracking-wide uppercase">
+                  {availabilityLabel}
+                </span>
               </div>
+            )}
 
-              {/* Availability Badge */}
-              {available && (
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                  <span className="text-[10px] font-bold text-emerald-800 tracking-wide uppercase">
-                    {availabilityLabel}
-                  </span>
-                </div>
-              )}
-
-              {/* Stats Grid */}
-              {stats.length > 0 && (
-                <div className="w-full grid grid-cols-2 gap-4 pt-4 border-t border-border-subtle">
-                  {stats.map((stat, idx) => (
-                    <div key={idx} className="space-y-0.5 text-center">
-                      <h4 className="text-2xl font-bold font-display text-text-primary">{stat.value}</h4>
-                      <p className="text-[10px] text-text-tertiary font-medium uppercase tracking-wider">{stat.label}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* Stats / Tags Grid */}
+            {stats.length > 0 && (
+              <div className="w-full max-w-sm flex flex-wrap items-center justify-center gap-6 pt-2 z-10">
+                {stats.map((stat, idx) => (
+                  <div key={idx} className="flex flex-col items-center">
+                    <h4 className="text-lg md:text-xl font-extrabold font-display text-text-primary leading-tight">{stat.value}</h4>
+                    <p className="text-[9px] md:text-[10px] text-text-tertiary font-bold uppercase tracking-widest mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
               {/* Divider & Social Icons for Mobile */}
               {socialLinks.length > 0 && (
@@ -185,7 +184,6 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
                   })}
                 </div>
               )}
-            </div>
           </motion.div>
         </motion.div>
       </div>

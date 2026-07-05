@@ -24,8 +24,8 @@ export const AboutSection = ({ data }: AboutSectionProps) => {
   ];
 
   return (
-    <section id="about" className="py-24 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-12">
+    <section id="about" className="py-12 md:py-16 relative z-10 scroll-mt-12">
+      <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-8 md:space-y-12">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center space-y-3">
           <div className="px-3 py-1 bg-accent-light border border-accent-primary/10 text-accent-primary text-xs font-bold tracking-widest uppercase rounded-full">
@@ -39,45 +39,43 @@ export const AboutSection = ({ data }: AboutSectionProps) => {
           </p>
         </div>
 
-        {/* Contents Grid */}
-        <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-          {/* Bio card Left (60%) */}
+        {/* Contents Container */}
+        <div className="flex flex-col gap-12 items-center">
+          {/* Bio text (No box, spread out) */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="flex-1 lg:max-w-[60%]"
+            className="w-full max-w-5xl px-4"
           >
-            <Card glass className="h-full p-8 rounded-[24px] flex flex-col justify-between">
-              <div
-                className="text-text-secondary text-sm md:text-base leading-relaxed space-y-4"
-                dangerouslySetInnerHTML={{ __html: bioHtml }}
-              />
-            </Card>
+            <div
+              className="text-text-secondary text-base md:text-lg lg:text-xl leading-relaxed space-y-6"
+              dangerouslySetInnerHTML={{ __html: bioHtml }}
+            />
           </motion.div>
 
-          {/* Info cards Right (40%) */}
+          {/* Info cards (Bottom Grid, spread length-wise) */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
-            className="w-full lg:w-[40%] flex flex-col gap-4"
+            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
+            className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 px-4 mt-4"
           >
             {infoItems.map((item, idx) => {
               const Icon = item.icon;
               return (
                 <div
                   key={idx}
-                  className="flex items-center gap-4 p-4 bg-white border border-border-subtle rounded-xl shadow-sm hover:border-accent-primary/20 transition-all duration-300"
+                  className="flex flex-row items-center gap-5 p-5 bg-white border border-border-subtle rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-accent-primary/30 transition-all duration-300"
                 >
-                  <div className="p-3 bg-accent-light text-accent-primary rounded-xl shrink-0">
-                    <Icon className="w-5 h-5" />
+                  <div className="p-3.5 bg-accent-light text-accent-primary rounded-xl shrink-0">
+                    <Icon className="w-6 h-6" />
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider">{item.label}</p>
-                    <h4 className="text-sm font-semibold text-text-primary mt-0.5">{item.value}</h4>
+                  <div className="text-left">
+                    <p className="text-xs font-bold text-text-tertiary uppercase tracking-wider">{item.label}</p>
+                    <h4 className="text-base font-semibold text-text-primary mt-1">{item.value}</h4>
                   </div>
                 </div>
               );
