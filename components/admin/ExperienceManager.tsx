@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { supabase } from '@/lib/supabase/client';
 import { Experience } from '@/types';
 import toast from '@/components/ui/toast';
-import { Plus, GripVertical, Edit2, Trash2, Globe, ArrowLeft, PlusCircle } from 'lucide-react';
+import { Plus, GripVertical, Edit2, Trash2, Globe, ArrowLeft, PlusCircle, Award, ExternalLink, Eye, FileText, ShieldCheck } from 'lucide-react';
 import Button from '../ui/button';
 import Input from '../ui/input';
 import Select from '../ui/select';
@@ -143,6 +143,7 @@ export const ExperienceManager = () => {
 
   const watchLogo = watch('company_logo_url');
   const watchCertFile = watch('certificate_file_url');
+  const watchCertUrl = watch('certificate_url');
   const watchIsCurrent = watch('is_current') ?? false;
 
   const sensors = useSensors(useSensor(PointerSensor));
@@ -449,21 +450,125 @@ export const ExperienceManager = () => {
               />
             </div>
 
-            {/* Certificate Links */}
-            <div className="space-y-3 pt-2 border-t border-border-subtle">
-              <span className="text-xs font-bold text-text-secondary">Certificate / Reference Credentials</span>
-              <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-text-tertiary">Credential Link URL</label>
-                <Input {...register('certificate_url')} placeholder="Verification Link URL" />
+            {/* ===== Documents Section ===== */}
+            <div className="space-y-5 pt-2 border-t border-border-subtle">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-accent-primary" />
+                <span className="text-xs font-bold text-text-secondary">Documents & Credentials</span>
               </div>
-              <div className="space-y-2">
-                <label className="text-[11px] font-semibold text-text-tertiary">Certificate Document Upload</label>
-                <FileUpload
-                  folder="credentials"
-                  accept=".pdf,image/*"
-                  value={watchCertFile}
-                  onUploadComplete={(url) => setValue('certificate_file_url', url)}
-                />
+
+              {/* ---- BOX 1: Offer Letter ---- */}
+              <div className="rounded-xl border border-border-default bg-bg-primary/60 overflow-hidden">
+                {/* Box Header */}
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle bg-bg-secondary">
+                  <div className="p-1 rounded bg-accent-light">
+                    <ShieldCheck className="w-3.5 h-3.5 text-accent-primary" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-text-primary">Offer Letter / Reference Document</p>
+                    <p className="text-[10px] text-text-tertiary">Shown when visitor clicks &quot;Verify Reference Credential&quot;</p>
+                  </div>
+                </div>
+
+                <div className="p-4 space-y-3">
+                  <FileUpload
+                    folder="credentials"
+                    accept=".pdf,image/*"
+                    value={watchCertFile}
+                    onUploadComplete={(url) => setValue('certificate_file_url', url)}
+                  />
+
+                  {/* Live inline preview */}
+                  {watchCertFile && (
+                    <div className="rounded-lg border border-border-subtle overflow-hidden">
+                      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border-subtle bg-bg-secondary">
+                        <span className="text-[9px] font-bold text-text-tertiary tracking-widest uppercase">Preview</span>
+                        <a
+                          href={watchCertFile}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-primary hover:underline cursor-pointer"
+                        >
+                          <Eye className="w-3 h-3" /> Open Full
+                        </a>
+                      </div>
+                      <div className="p-2 flex items-center justify-center bg-white min-h-[140px] max-h-[220px] overflow-hidden">
+                        {watchCertFile.toLowerCase().endsWith('.pdf') ? (
+                          <iframe
+                            src={`${watchCertFile}#toolbar=0&navpanes=0`}
+                            className="w-full rounded"
+                            style={{ height: '200px' }}
+                            title="Offer Letter Preview"
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={watchCertFile}
+                            alt="Offer Letter Preview"
+                            className="max-w-full max-h-[200px] object-contain rounded"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* ---- BOX 2: Certificate of Completion ---- */}
+              <div className="rounded-xl border border-border-default bg-bg-primary/60 overflow-hidden">
+                {/* Box Header */}
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border-subtle bg-bg-secondary">
+                  <div className="p-1 rounded bg-green-50">
+                    <Award className="w-3.5 h-3.5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-text-primary">Certificate of Completion</p>
+                    <p className="text-[10px] text-text-tertiary">Shown as &quot;Certificate of Completion&quot; link on the experience card</p>
+                  </div>
+                </div>
+
+                <div className="p-4 space-y-3">
+                  <FileUpload
+                    folder="credentials"
+                    accept=".pdf,image/*"
+                    value={watchCertUrl}
+                    onUploadComplete={(url) => setValue('certificate_url', url)}
+                  />
+
+                  {/* Live inline preview */}
+                  {watchCertUrl && (
+                    <div className="rounded-lg border border-border-subtle overflow-hidden">
+                      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border-subtle bg-bg-secondary">
+                        <span className="text-[9px] font-bold text-text-tertiary tracking-widest uppercase">Preview</span>
+                        <a
+                          href={watchCertUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-green-600 hover:underline cursor-pointer"
+                        >
+                          <Eye className="w-3 h-3" /> Open Full
+                        </a>
+                      </div>
+                      <div className="p-2 flex items-center justify-center bg-white min-h-[140px] max-h-[220px] overflow-hidden">
+                        {watchCertUrl.toLowerCase().endsWith('.pdf') ? (
+                          <iframe
+                            src={`${watchCertUrl}#toolbar=0&navpanes=0`}
+                            className="w-full rounded"
+                            style={{ height: '200px' }}
+                            title="Certificate of Completion Preview"
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={watchCertUrl}
+                            alt="Certificate of Completion Preview"
+                            className="max-w-full max-h-[200px] object-contain rounded"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
