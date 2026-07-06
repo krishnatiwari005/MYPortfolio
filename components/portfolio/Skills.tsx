@@ -73,8 +73,32 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
           ))}
         </div>
 
-        {/* Skills Grid */}
-        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        {/* Mobile Skills Points */}
+        <motion.div layout className="flex md:hidden flex-wrap gap-3 justify-center">
+          <AnimatePresence mode="popLayout">
+            {filteredSkills.map((skill) => (
+              <motion.div
+                layout
+                key={skill.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-border-default rounded-full shadow-sm"
+              >
+                {skill.logo_url ? (
+                  <img src={skill.logo_url} alt={skill.name} className="w-4 h-4 object-contain" loading="lazy" />
+                ) : (
+                  <Globe className="w-3 h-3 text-text-tertiary" />
+                )}
+                <span className="text-sm font-semibold text-text-primary">{skill.name}</span>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Desktop Skills Grid */}
+        <motion.div layout className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredSkills.map((skill) => (
               <motion.div

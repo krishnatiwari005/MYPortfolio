@@ -133,3 +133,16 @@ body::before {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+  }
+  /* Ensure grid layouts stack vertically */
+  .grid {
+    display: block !important;
+  }
+}

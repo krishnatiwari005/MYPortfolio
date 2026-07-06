@@ -56,7 +56,7 @@ export const FloatingNav = ({ initials = 'JD', logoUrl, onHireMeClick, panelOpen
   return (
     /* Outer wrapper: full width, centered, pointer-events-none so it doesn't block page */
     <motion.div
-      className="fixed top-4 z-[100] flex justify-center pointer-events-none"
+      className="hidden md:flex fixed top-4 z-[100] justify-center pointer-events-none"
       animate={{
         left: 0,
         right: panelOpen ? '480px' : '0px',

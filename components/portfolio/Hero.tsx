@@ -52,7 +52,7 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
   };
 
   return (
-    <section className="flex items-center justify-center pt-32 pb-12 relative z-10">
+    <section className="flex items-center justify-center pt-8 md:pt-32 pb-12 relative z-10">
       <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
         {/* Left Column (Main Intro) */}
         <motion.div
