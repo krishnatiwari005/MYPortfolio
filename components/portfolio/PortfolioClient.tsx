@@ -21,6 +21,7 @@ import Footer from './Footer';
 import LockButton from '../auth/LockButton';
 import OtpModal from '../auth/OtpModal';
 import AdminPanel from '../auth/AdminPanel';
+import GeometricBackground from '../ui/GeometricBackground';
 
 import { Hero, About, Skill, Experience, Project, Certificate, Resume, Settings } from '@/types';
 
@@ -81,10 +82,8 @@ export default function PortfolioClient({
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--gradient-hero)]">
-      {/* Drifting Background Decorative Orbs */}
-      <div className="fixed top-0 right-0 w-[600px] h-[600px] rounded-full orb-indigo z-0 pointer-events-none translate-x-1/3 -translate-y-1/3" />
-      <div className="fixed bottom-0 left-0 w-[400px] h-[400px] rounded-full orb-purple z-0 pointer-events-none -translate-x-1/3 translate-y-1/3" />
-      <div className="fixed top-1/2 right-0 w-[300px] h-[300px] rounded-full orb-emerald z-0 pointer-events-none translate-x-1/2 -translate-y-1/2" />
+      {/* Geometric Modern Background */}
+      <GeometricBackground />
 
       {/* Floating Navigation Header */}
       <FloatingNav initials={initials} logoUrl={hero?.photo_url || undefined} onHireMeClick={handleHireMeClick} panelOpen={panelOpen} />
