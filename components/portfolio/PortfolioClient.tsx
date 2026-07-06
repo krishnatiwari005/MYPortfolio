@@ -95,7 +95,7 @@ export default function PortfolioClient({
           width: panelOpen ? 'calc(100% - 480px)' : '100%',
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-        className="relative min-h-screen z-10 flex flex-col items-stretch"
+        className="relative min-h-screen flex flex-col items-stretch"
       >
         <HeroSection data={hero} onContactClick={handleHireMeClick} onResumeClick={handleResumeClick} />
         <AboutSection data={about} />

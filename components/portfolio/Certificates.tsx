@@ -16,7 +16,7 @@ export const CertificatesSection = ({ certificates }: CertificatesSectionProps) 
   const [activeLightbox, setActiveLightbox] = useState<Certificate | null>(null);
 
   return (
-    <section id="certificates" className="py-12 md:py-16 relative z-10 scroll-mt-12">
+    <section id="certificates" className={`py-12 md:py-16 relative scroll-mt-12 ${activeLightbox ? 'z-[999]' : 'z-10'}`}>
       <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-8 md:space-y-12">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center space-y-3">

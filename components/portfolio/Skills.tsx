@@ -73,88 +73,69 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
           ))}
         </div>
 
-        {/* Mobile Skills Points */}
-        <motion.div layout className="flex md:hidden flex-wrap gap-3 justify-center">
+        {/* Skills Grid */}
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
           <AnimatePresence mode="popLayout">
-            {filteredSkills.map((skill) => (
+            {filteredSkills.map((skill, index) => (
               <motion.div
                 layout
                 key={skill.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white border border-border-default rounded-full shadow-sm"
-              >
-                {skill.logo_url ? (
-                  <img src={skill.logo_url} alt={skill.name} className="w-4 h-4 object-contain" loading="lazy" />
-                ) : (
-                  <Globe className="w-3 h-3 text-text-tertiary" />
-                )}
-                <span className="text-sm font-semibold text-text-primary">{skill.name}</span>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Desktop Skills Grid */}
-        <motion.div layout className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredSkills.map((skill) => (
-              <motion.div
-                layout
-                key={skill.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-                whileHover={{ y: -4, boxShadow: 'var(--shadow-float)' }}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25, delay: index * 0.05 }}
+                whileHover={{ y: -5, scale: 1.02 }}
                 className="h-full"
               >
-                <Card glass className="p-5 rounded-2xl flex flex-col justify-between h-full relative overflow-hidden">
-                  <div>
-                    {/* Category pill */}
-                    <div className="absolute top-4 right-4">
-                      <Badge className={getCategoryColor(skill.category)} variant="outline">
-                        {skill.category}
-                      </Badge>
-                    </div>
-
-                    {/* Logo */}
-                    <div className="w-10 h-10 rounded-xl bg-bg-primary border border-border-subtle flex items-center justify-center p-1.5 overflow-hidden">
-                      {skill.logo_url ? (
-                        <img
-                          src={skill.logo_url}
-                          alt={skill.name}
-                          width={40}
-                          height={40}
-                          loading="lazy"
-                          className="object-contain w-full h-full"
-                        />
-                      ) : (
-                        <Globe className="w-5 h-5 text-text-tertiary" />
-                      )}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-base font-bold text-text-primary mt-4 font-display">{skill.name}</h3>
-                    <p className="text-xs text-text-tertiary mt-0.5">{skill.years} {skill.years === 1 ? 'Year' : 'Years'} Exp</p>
+                <Card glass className="p-3.5 rounded-2xl flex items-center gap-3.5 relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-accent-primary/10 group bg-white/80 hover:bg-white border-border-default hover:border-accent-primary/50 z-10 h-full">
+                  {/* Decorative background element */}
+                  <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-gradient-to-br from-accent-primary/5 to-purple-500/5 rounded-full blur-2xl group-hover:from-accent-primary/20 group-hover:to-purple-500/20 transition-colors duration-500 z-0"></div>
+                  
+                  {/* Logo */}
+                  <div className="w-12 h-12 shrink-0 rounded-xl bg-white border border-border-subtle flex items-center justify-center p-2 overflow-hidden group-hover:border-accent-primary/40 transition-all duration-300 shadow-sm group-hover:shadow-md z-10 relative">
+                    {skill.logo_url ? (
+                      <img
+                        src={skill.logo_url}
+                        alt={skill.name}
+                        width={32}
+                        height={32}
+                        loading="lazy"
+                        className="object-contain w-full h-full group-hover:scale-110 group-hover:rotate-[5deg] transition-transform duration-300"
+                      />
+                    ) : (
+                      <Globe className="w-6 h-6 text-text-tertiary group-hover:text-accent-primary group-hover:rotate-[15deg] transition-all duration-300" />
+                    )}
                   </div>
 
-                  {/* Proficiency progress bar */}
-                  <div className="mt-4 space-y-1.5">
-                    <div className="flex items-center justify-between text-[10px] font-bold text-text-tertiary">
-                      <span>Proficiency</span>
-                      <span>{skill.proficiency}%</span>
+                  {/* Info */}
+                  <div className="flex-1 min-w-0 z-10 relative flex flex-col justify-center">
+                    <h3 className="text-sm sm:text-base font-extrabold text-text-primary font-display group-hover:text-accent-primary transition-colors leading-tight mb-1 break-words">{skill.name}</h3>
+                    
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md flex-shrink-0 uppercase tracking-wider ${getCategoryColor(skill.category)}`}>
+                        {skill.category}
+                      </div>
+                      <span className="text-[10px] font-bold text-text-tertiary group-hover:text-text-secondary transition-colors">
+                        {skill.proficiency}%
+                      </span>
                     </div>
-                    <div className="w-full h-1 bg-border-default rounded-full overflow-hidden">
+                    
+                    {/* Proficiency progress bar */}
+                    <div className="w-full h-1.5 bg-border-default/60 rounded-full overflow-hidden shadow-inner relative">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${skill.proficiency}%` }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-                        className="h-full bg-gradient-to-r from-accent-primary to-[#7C3AED]"
-                      />
+                        transition={{ duration: 1.2, ease: 'easeOut', delay: 0.2 }}
+                        className="h-full bg-gradient-to-r from-accent-primary to-[#7C3AED] relative overflow-hidden"
+                      >
+                        {/* Shimmer effect inside progress bar */}
+                        <motion.div 
+                          className="absolute top-0 bottom-0 left-0 w-[50%] bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                          animate={{ x: ["-200%", "200%"] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                        />
+                      </motion.div>
                     </div>
                   </div>
                 </Card>
