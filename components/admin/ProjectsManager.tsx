@@ -434,6 +434,9 @@ export const ProjectsManager = () => {
                   <option value="Full Stack">Full Stack</option>
                   <option value="DevOps">DevOps</option>
                   <option value="Mobile">Mobile</option>
+                  <option value="ML-Full stack">ML-Full stack</option>
+                  <option value="Flutter Full stack">Flutter Full stack</option>
+                  <option value="Deep learning">Deep learning</option>
                 </Select>
               </div>
 
