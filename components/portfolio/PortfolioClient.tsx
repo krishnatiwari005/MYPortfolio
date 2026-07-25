@@ -23,7 +23,7 @@ import OtpModal from '../auth/OtpModal';
 import AdminPanel from '../auth/AdminPanel';
 import GeometricBackground from '../ui/GeometricBackground';
 
-import { Hero, About, Skill, Experience, Project, Certificate, Resume, Settings } from '@/types';
+import { Hero, About, Skill, Experience, Project, Certificate, Hackathon, Resume, Settings } from '@/types';
 
 export interface PortfolioClientProps {
   hero: Hero | null;
@@ -32,6 +32,7 @@ export interface PortfolioClientProps {
   experience: Experience[];
   projects: Project[];
   certificates: Certificate[];
+  hackathons: Hackathon[];
   resume: Resume | null;
   settings: Settings | null;
 }
@@ -43,6 +44,7 @@ export default function PortfolioClient({
   experience,
   projects,
   certificates,
+  hackathons,
   resume,
   settings,
 }: PortfolioClientProps) {
@@ -81,7 +83,7 @@ export default function PortfolioClient({
     : 'JD';
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[var(--gradient-hero)]">
+    <div className="relative min-h-screen overflow-hidden">
       {/* Geometric Modern Background */}
       <GeometricBackground />
 
@@ -102,7 +104,7 @@ export default function PortfolioClient({
         <SkillsSection skills={skills} />
         <ExperienceSection experiences={experience} />
         <ProjectsSection projects={projects} />
-        <CertificatesSection certificates={certificates} />
+        <CertificatesSection certificates={certificates} hackathons={hackathons} />
         <ResumeSection data={resume} />
         <ContactSection data={hero} />
         <Contributions hero={hero} />

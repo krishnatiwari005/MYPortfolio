@@ -226,7 +226,7 @@ export const SettingsManager = () => {
         </div>
 
         {/* Accent Color picker */}
-        <div className="space-y-2 p-4 bg-white border border-border-default rounded-2xl shadow-sm">
+        <div className="space-y-2 p-4 bg-[#001a33] border border-border-default rounded-2xl shadow-sm">
           <label className="text-xs font-semibold text-text-primary block">Accent Highlight Color</label>
           <div className="flex items-center gap-3">
             <input
@@ -245,7 +245,7 @@ export const SettingsManager = () => {
         </div>
 
         {/* Toggles */}
-        <div className="space-y-3 p-4 bg-white border border-border-default rounded-2xl shadow-sm">
+        <div className="space-y-3 p-4 bg-[#001a33] border border-border-default rounded-2xl shadow-sm">
           <div className="flex items-center justify-between py-1.5">
             <div className="space-y-0.5">
               <span className="text-xs font-semibold text-text-primary">Portfolio Visbility</span>
@@ -314,7 +314,7 @@ export const SettingsManager = () => {
           <Button variant="secondary" size="sm" className="flex items-center gap-1.5" onClick={handleExport}>
             <Download className="w-4 h-4" /> Export Backup
           </Button>
-          <label className="inline-flex items-center justify-center font-medium rounded-xl transition-colors cursor-pointer bg-white text-text-primary border border-border-default text-xs py-2 px-3 hover:bg-bg-primary shadow-sm gap-1.5">
+          <label className="inline-flex items-center justify-center font-medium rounded-xl transition-colors cursor-pointer bg-[#001a33] text-text-primary border border-border-default text-xs py-2 px-3 hover:bg-bg-primary shadow-sm gap-1.5">
             <Upload className="w-4 h-4" /> Import Restore
             <input
               type="file"

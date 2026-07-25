@@ -1,5 +1,5 @@
 import { createClient } from './server';
-import { Hero, About, Skill, Experience, Project, Certificate, Resume, SeoSettings, Settings } from '@/types/database';
+import { Hero, About, Skill, Experience, Project, Certificate, Hackathon, Resume, SeoSettings, Settings } from '@/types/database';
 
 export async function getHero(): Promise<Hero | null> {
   const supabase = await createClient();
@@ -52,6 +52,16 @@ export async function getCertificates(): Promise<Certificate[]> {
     .select('*')
     .order('display_order', { ascending: true });
   if (error) console.error('Error fetching certificates:', error);
+  return data ?? [];
+}
+
+export async function getHackathons(): Promise<Hackathon[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('hackathons')
+    .select('*')
+    .order('display_order', { ascending: true });
+  if (error) console.error('Error fetching hackathons:', error);
   return data ?? [];
 }
 

@@ -11,7 +11,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          'flex h-10 w-full rounded-xl border border-border-default bg-white px-3 py-2 text-sm text-text-primary file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-accent-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
+          'flex h-10 w-full rounded-xl border border-border-default bg-[#001a33] px-3 py-2 text-sm text-text-primary file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-[#00e5ff]/40 focus:border-[#00e5ff] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200',
           error && 'border-error focus:ring-error/40 focus:border-error',
           className
         )}
@@ -32,7 +32,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <textarea
         className={cn(
-          'flex min-h-[80px] w-full rounded-xl border border-border-default bg-white px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-accent-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 resize-y',
+          'flex min-h-[80px] w-full rounded-xl border border-border-default bg-[#001a33] px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-[#00e5ff]/40 focus:border-[#00e5ff] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 resize-y',
           error && 'border-error focus:ring-error/40 focus:border-error',
           className
         )}

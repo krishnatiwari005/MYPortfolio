@@ -125,28 +125,28 @@ export const DashboardManager = ({ onNavigate }: DashboardManagerProps) => {
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => onNavigate('projects')}
-            className="flex items-center justify-between p-3 bg-white border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
+            className="flex items-center justify-between p-3 bg-[#001a33] border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
           >
             <span>Manage Projects</span>
             <ArrowRight className="w-3.5 h-3.5 text-accent-primary" />
           </button>
           <button
             onClick={() => onNavigate('hero')}
-            className="flex items-center justify-between p-3 bg-white border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
+            className="flex items-center justify-between p-3 bg-[#001a33] border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
           >
             <span>Edit Hero Info</span>
             <ArrowRight className="w-3.5 h-3.5 text-accent-primary" />
           </button>
           <button
             onClick={() => onNavigate('resume')}
-            className="flex items-center justify-between p-3 bg-white border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
+            className="flex items-center justify-between p-3 bg-[#001a33] border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
           >
             <span>Update Resume</span>
             <ArrowRight className="w-3.5 h-3.5 text-accent-primary" />
           </button>
           <button
             onClick={() => onNavigate('settings')}
-            className="flex items-center justify-between p-3 bg-white border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
+            className="flex items-center justify-between p-3 bg-[#001a33] border border-border-default rounded-xl hover:bg-bg-primary text-left text-xs font-semibold text-text-secondary transition-all cursor-pointer"
           >
             <span>CMS Settings</span>
             <ArrowRight className="w-3.5 h-3.5 text-accent-primary" />

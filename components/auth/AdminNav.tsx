@@ -8,6 +8,7 @@ import {
   Briefcase,
   FolderOpen,
   Award,
+  Trophy,
   FileUp,
   Search,
   Settings2,
@@ -29,6 +30,7 @@ export const AdminNav = ({ activeSection, onSelectSection }: AdminNavProps) => {
     { id: 'experience', label: 'Experience', icon: Briefcase },
     { id: 'projects', label: 'Projects', icon: FolderOpen },
     { id: 'certificates', label: 'Certificates', icon: Award },
+    { id: 'hackathons', label: 'Hackathons', icon: Trophy },
     { id: 'resume', label: 'Resume', icon: FileUp },
     { id: 'seo', label: 'SEO Settings', icon: Search },
     { id: 'settings', label: 'Settings', icon: Settings2 },
@@ -48,7 +50,7 @@ export const AdminNav = ({ activeSection, onSelectSection }: AdminNavProps) => {
             className={cn(
               'flex items-center gap-3 w-full py-2.5 px-4 rounded-xl text-left text-sm font-medium transition-all cursor-pointer focus:outline-none focus:bg-accent-light',
               isActive
-                ? 'bg-accent-light text-accent-primary border-l-4 border-accent-primary pl-3'
+                ? 'bg-[#00e5ff] text-[#001a33] shadow-[0_0_15px_rgba(0,229,255,0.3)] border-none'
                 : 'text-text-secondary hover:bg-bg-primary hover:text-text-primary'
             )}
           >

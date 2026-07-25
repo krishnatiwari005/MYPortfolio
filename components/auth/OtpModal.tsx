@@ -82,7 +82,7 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 16 }}
           transition={{ type: 'spring', stiffness: 350, damping: 26 }}
-          className="relative w-full max-w-[400px] bg-white rounded-3xl p-8 shadow-float z-10 overflow-hidden"
+          className="relative w-full max-w-[400px] bg-[#001a33] rounded-3xl p-8 shadow-float z-10 overflow-hidden"
         >
           {otpStep === 'email' && (
             <motion.div
@@ -168,7 +168,7 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
                     onPaste={handlePaste}
                     disabled={isSubmitting}
                     className={cn(
-                      'w-12 h-14 border rounded-xl text-center text-2xl font-bold text-text-primary bg-bg-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-accent-primary focus:bg-white transition-all',
+                      'w-12 h-14 border rounded-xl text-center text-2xl font-bold text-text-primary bg-bg-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-accent-primary focus:bg-[#001a33] transition-all',
                       errorMsg ? 'border-error' : 'border-border-default'
                     )}
                   />

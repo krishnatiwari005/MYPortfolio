@@ -133,7 +133,7 @@ export const ResumeManager = () => {
       </div>
 
       {resume ? (
-        <div className="p-6 bg-white border border-border-default rounded-2xl shadow-sm space-y-4">
+        <div className="p-6 bg-[#001a33] border border-border-default rounded-2xl shadow-sm space-y-4">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-red-50 text-red-500 rounded-2xl shrink-0">
               <FileText className="w-8 h-8" />
@@ -188,7 +188,7 @@ export const ResumeManager = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center border-2 border-dashed border-border-default rounded-2xl p-12 text-center bg-white/40">
+        <div className="flex flex-col items-center justify-center border-2 border-dashed border-border-default rounded-2xl p-12 text-center bg-[#001a33]/40">
           {isUploading ? (
             <div className="space-y-2">
               <Loader2 className="w-8 h-8 text-accent-primary animate-spin mx-auto" />

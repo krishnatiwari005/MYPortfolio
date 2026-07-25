@@ -53,7 +53,7 @@ const SortableCertItem = ({ cert, onEdit, onDelete }: CertItemProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-3.5 bg-white border border-border-default rounded-xl hover:border-accent-primary/40 transition-colors shadow-sm"
+      className="flex items-center justify-between p-3.5 bg-[#001a33] border border-border-default rounded-xl hover:border-accent-primary/40 transition-colors shadow-sm"
     >
       <div className="flex items-center gap-3 overflow-hidden">
         <button

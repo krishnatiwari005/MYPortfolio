@@ -8,6 +8,7 @@ export type AdminSection =
   | 'experience'
   | 'projects'
   | 'certificates'
+  | 'hackathons'
   | 'resume'
   | 'seo'
   | 'settings';

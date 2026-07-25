@@ -34,7 +34,7 @@ export function HeroSkeleton() {
 // Skill Card Skeleton
 export function SkillCardSkeleton() {
   return (
-    <div className="border border-border-subtle rounded-xl p-5 bg-white/60 space-y-4">
+    <div className="border border-border-subtle rounded-xl p-5 bg-[#001a33]/60 space-y-4">
       <div className="flex justify-between items-center">
         <Skeleton className="h-10 w-10 rounded-xl" />
         <Skeleton className="h-5 w-16 rounded-full" />
@@ -51,7 +51,7 @@ export function SkillCardSkeleton() {
 // Project Card Skeleton
 export function ProjectCardSkeleton() {
   return (
-    <div className="border border-border-subtle rounded-2xl overflow-hidden bg-white/60">
+    <div className="border border-border-subtle rounded-2xl overflow-hidden bg-[#001a33]/60">
       <Skeleton className="aspect-video w-full" />
       <div className="p-5 space-y-3">
         <div className="flex justify-between">
@@ -73,7 +73,7 @@ export function ProjectCardSkeleton() {
 // Certificate Card Skeleton
 export function CertificateCardSkeleton() {
   return (
-    <div className="border border-border-subtle rounded-xl overflow-hidden bg-white/60 p-4 space-y-3">
+    <div className="border border-border-subtle rounded-xl overflow-hidden bg-[#001a33]/60 p-4 space-y-3">
       <Skeleton className="h-32 w-full rounded-lg" />
       <Skeleton className="h-5 w-3/4 rounded-md" />
       <Skeleton className="h-3.5 w-1/2 rounded-md" />
@@ -120,7 +120,7 @@ export function AdminListSkeleton() {
         <Skeleton className="h-8 w-32 rounded-md" />
         <Skeleton className="h-10 w-24 rounded-md" />
       </div>
-      <div className="border border-border-subtle rounded-2xl bg-white divide-y divide-border-subtle">
+      <div className="border border-border-subtle rounded-2xl bg-[#001a33] divide-y divide-border-subtle">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="flex items-center justify-between p-4">
             <div className="flex items-center gap-4">

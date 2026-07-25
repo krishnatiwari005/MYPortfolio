@@ -23,7 +23,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {
             // Variants
             'bg-gradient-to-r from-accent-primary to-[#7C3AED] text-white hover:opacity-95 shadow-md': variant === 'primary',
-            'bg-white text-text-primary border border-border-default hover:bg-bg-primary shadow-sm': variant === 'secondary',
+            'bg-[#001a33] text-text-primary border border-border-default hover:bg-bg-primary shadow-sm': variant === 'secondary',
             'bg-accent-light text-accent-primary hover:bg-accent-primary/10': variant === 'accent-light',
             'text-text-secondary hover:bg-border-subtle hover:text-text-primary': variant === 'ghost',
             'bg-error text-white hover:bg-error/90 shadow-sm': variant === 'danger',

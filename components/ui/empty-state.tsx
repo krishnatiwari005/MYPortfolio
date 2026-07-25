@@ -18,7 +18,7 @@ export const EmptyState = ({
   onAction,
 }: EmptyStateProps) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center p-8 border border-dashed border-border-default rounded-2xl bg-white/40 backdrop-blur-sm max-w-md mx-auto my-6">
+    <div className="flex flex-col items-center justify-center text-center p-8 border border-dashed border-border-default rounded-2xl bg-[#001a33]/40 backdrop-blur-sm max-w-md mx-auto my-6">
       <div className="p-3 bg-accent-light text-accent-primary rounded-2xl mb-4">
         <Icon className="w-8 h-8" />
       </div>

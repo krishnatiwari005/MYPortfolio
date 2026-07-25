@@ -14,6 +14,7 @@ import SkillsManager from '../admin/SkillsManager';
 import ExperienceManager from '../admin/ExperienceManager';
 import ProjectsManager from '../admin/ProjectsManager';
 import CertificatesManager from '../admin/CertificatesManager';
+import HackathonsManager from '../admin/HackathonsManager';
 import ResumeManager from '../admin/ResumeManager';
 import SeoManager from '../admin/SeoManager';
 import SettingsManager from '../admin/SettingsManager';
@@ -54,6 +55,8 @@ export const AdminPanel = ({ isOpen, onClose, onLogout }: AdminPanelProps) => {
         return <ProjectsManager />;
       case 'certificates':
         return <CertificatesManager />;
+      case 'hackathons':
+        return <HackathonsManager />;
       case 'resume':
         return <ResumeManager />;
       case 'seo':
@@ -111,7 +114,7 @@ export const AdminPanel = ({ isOpen, onClose, onLogout }: AdminPanelProps) => {
           exit={{ x: panelWidth }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           style={{ width: panelWidth }}
-          className="fixed top-0 right-0 h-screen bg-white border-l border-border-subtle shadow-2xl z-[200] flex flex-col"
+          className="fixed top-0 right-0 h-screen bg-[#001a33] border-l border-border-subtle shadow-2xl z-[200] flex flex-col"
         >
           {/* Drag Resize Handle — left edge */}
           <div
@@ -209,7 +212,7 @@ export const AdminPanel = ({ isOpen, onClose, onLogout }: AdminPanelProps) => {
                 <select
                   value={activeSection}
                   onChange={(e) => setActiveSection(e.target.value as AdminSection)}
-                  className="w-full text-xs font-semibold h-9 px-3 border border-border-default rounded-xl bg-white text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40"
+                  className="w-full text-xs font-semibold h-9 px-3 border border-border-default rounded-xl bg-[#001a33] text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40"
                 >
                   <option value="dashboard">Dashboard</option>
                   <option value="hero">Hero Section</option>
@@ -218,6 +221,7 @@ export const AdminPanel = ({ isOpen, onClose, onLogout }: AdminPanelProps) => {
                   <option value="experience">Experience Manager</option>
                   <option value="projects">Projects Portfolio</option>
                   <option value="certificates">Certificates</option>
+                  <option value="hackathons">Hackathons</option>
                   <option value="resume">Resume PDF</option>
                   <option value="seo">SEO Meta Settings</option>
                   <option value="settings">Global Settings</option>
@@ -230,7 +234,7 @@ export const AdminPanel = ({ isOpen, onClose, onLogout }: AdminPanelProps) => {
 
           {/* Sticky save bar when editor forms are active */}
           {hasStickySave && (
-            <div className="absolute bottom-0 left-0 right-0 py-3.5 px-5 bg-white border-t border-border-subtle flex items-center justify-center shadow-lg z-20">
+            <div className="absolute bottom-0 left-0 right-0 py-3.5 px-5 bg-[#001a33] border-t border-border-subtle flex items-center justify-center shadow-lg z-20">
               <Button
                 type="submit"
                 form="admin-active-form"

@@ -83,7 +83,7 @@ export const FileUpload = ({
   return (
     <div className="w-full">
       {value ? (
-        <div className="relative flex items-center justify-between p-4 border border-border-default bg-white rounded-xl">
+        <div className="relative flex items-center justify-between p-4 border border-border-default bg-[#001a33] rounded-xl">
           <div className="flex items-center gap-3 overflow-hidden">
             {accept.startsWith('image/') ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -119,7 +119,7 @@ export const FileUpload = ({
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={cn(
-            'flex flex-col items-center justify-center border-2 border-dashed border-border-default rounded-xl p-6 cursor-pointer bg-white/40 hover:bg-white/70 transition-all text-center',
+            'flex flex-col items-center justify-center border-2 border-dashed border-border-default rounded-xl p-6 cursor-pointer bg-[#001a33]/40 hover:bg-[#001a33]/70 transition-all text-center',
             isDragging && 'border-accent-primary bg-accent-light/10',
             isUploading && 'pointer-events-none opacity-80'
           )}

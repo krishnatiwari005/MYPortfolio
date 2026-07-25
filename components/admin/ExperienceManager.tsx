@@ -56,7 +56,7 @@ const SortableExpItem = ({ exp, onEdit, onDelete }: SortableExpItemProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-4 bg-white border border-border-default rounded-2xl hover:border-accent-primary/40 transition-colors shadow-sm"
+      className="flex items-center justify-between p-4 bg-[#001a33] border border-border-default rounded-2xl hover:border-accent-primary/40 transition-colors shadow-sm"
     >
       <div className="flex items-center gap-3 overflow-hidden">
         <button
@@ -492,7 +492,7 @@ export const ExperienceManager = () => {
                           <Eye className="w-3 h-3" /> Open Full
                         </a>
                       </div>
-                      <div className="p-2 flex items-center justify-center bg-white min-h-[140px] max-h-[220px] overflow-hidden">
+                      <div className="p-2 flex items-center justify-center bg-[#001a33] min-h-[140px] max-h-[220px] overflow-hidden">
                         {watchCertFile.toLowerCase().endsWith('.pdf') ? (
                           <iframe
                             src={`${watchCertFile}#toolbar=0&navpanes=0`}
@@ -549,7 +549,7 @@ export const ExperienceManager = () => {
                           <Eye className="w-3 h-3" /> Open Full
                         </a>
                       </div>
-                      <div className="p-2 flex items-center justify-center bg-white min-h-[140px] max-h-[220px] overflow-hidden">
+                      <div className="p-2 flex items-center justify-center bg-[#001a33] min-h-[140px] max-h-[220px] overflow-hidden">
                         {watchCertUrl.toLowerCase().endsWith('.pdf') ? (
                           <iframe
                             src={`${watchCertUrl}#toolbar=0&navpanes=0`}

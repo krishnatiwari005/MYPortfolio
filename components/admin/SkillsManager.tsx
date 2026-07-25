@@ -55,7 +55,7 @@ const SortableSkillItem = ({ skill, onEdit, onDelete }: SkillItemProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-3.5 bg-white border border-border-default rounded-xl hover:border-accent-primary/40 transition-colors shadow-sm"
+      className="flex items-center justify-between p-3.5 bg-[#001a33] border border-border-default rounded-xl hover:border-accent-primary/40 transition-colors shadow-sm"
     >
       <div className="flex items-center gap-3 overflow-hidden">
         <button
@@ -289,7 +289,7 @@ export const SkillsManager = () => {
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-all ${
               activeCategory === cat
                 ? 'bg-accent-primary text-white shadow-sm'
-                : 'bg-white border border-border-default text-text-secondary hover:bg-bg-primary'
+                : 'bg-[#001a33] border border-border-default text-text-secondary hover:bg-bg-primary'
             }`}
           >
             {cat}

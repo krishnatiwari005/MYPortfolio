@@ -45,7 +45,7 @@ const CertModal = ({ exp, onClose }: CertModalProps) => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 280, damping: 26 }}
-          className={`relative z-10 bg-white rounded-2xl shadow-2xl border border-border-subtle flex flex-col overflow-hidden transition-all duration-300 ${
+          className={`relative z-10 bg-[rgba(0,13,26,0.9)] backdrop-blur-xl rounded-2xl shadow-[0_0_40px_rgba(0,229,255,0.15)] border border-[rgba(0,229,255,0.2)] flex flex-col overflow-hidden transition-all duration-300 ${
             expanded
               ? 'w-full max-w-5xl h-[95vh]'
               : 'w-full max-w-lg h-[85vh]'
@@ -86,7 +86,7 @@ const CertModal = ({ exp, onClose }: CertModalProps) => {
           {/* Content Area — scrollable by the modal, not the PDF viewer */}
           <div
             ref={scrollRef}
-            className="flex-1 min-h-0 overflow-y-auto bg-white"
+            className="flex-1 min-h-0 overflow-y-auto bg-[rgba(0,13,26,0.9)]"
           >
             {fileUrl ? (
               isPdf ? (
@@ -159,27 +159,35 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
   return (
     <>
-      <section id="experience" className="py-12 md:py-16 relative z-10 scroll-mt-12">
-        <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-8 md:space-y-12">
+      <section id="experience" className="py-12 md:py-20 relative z-10 scroll-mt-12">
+        <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-12">
           {/* Section Header */}
-          <div className="flex flex-col items-center text-center space-y-3">
-            <div className="px-3 py-1 bg-accent-light border border-accent-primary/10 text-accent-primary text-xs font-bold tracking-widest uppercase rounded-full">
-              Journey
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[rgba(0,229,255,0.05)] border border-[rgba(0,229,255,0.2)] text-[#00e5ff] text-xs font-bold tracking-widest uppercase rounded-full shadow-[0_0_15px_rgba(0,229,255,0.1)]">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Career Log
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold font-display text-text-primary tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-extrabold font-display text-[#e0f7fa] tracking-tight text-glow">
               Work Experience
             </h2>
-            <p className="text-sm text-text-tertiary max-w-md">
-              A visual timeline of my career history, achievements, and technologies.
+            <p className="text-sm text-[#00b4d8] uppercase tracking-widest font-bold max-w-md">
+              A visual timeline of my career history and tech deployments.
             </p>
           </div>
 
           {/* Timeline container */}
-          <div className="max-w-[850px] mx-auto relative pt-8">
-            {/* Vertical Center Line */}
-            <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-[2px] bg-accent-primary/10 -translate-x-1/2" />
+          <div className="max-w-[900px] mx-auto relative pt-8">
+            {/* Cybernetic Vertical Center Line */}
+            <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#00e5ff]/40 to-transparent -translate-x-1/2" />
+            
+            {/* Pulse traveling down the line */}
+            <motion.div
+              className="absolute left-[24px] md:left-1/2 top-0 w-[2px] h-[100px] bg-gradient-to-b from-transparent via-[#00ff88] to-transparent -translate-x-1/2 z-0"
+              animate={{ top: ['0%', '100%'] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            />
 
-            <div className="space-y-12">
+            <div className="space-y-16">
               {[...experiences].sort((a, b) => {
                 if (a.is_current && !b.is_current) return -1;
                 if (!a.is_current && b.is_current) return 1;
@@ -198,42 +206,42 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     key={exp.id}
                     className="relative flex flex-col md:flex-row items-stretch"
                   >
-                    {/* Timeline Node Dot */}
-                    <div className="absolute left-[20px] md:left-1/2 top-6 w-3.5 h-3.5 rounded-full bg-white border-2 border-accent-primary -translate-x-1/2 z-10 shadow-sm" />
+                    {/* Glowing Diamond Node */}
+                    <div className="absolute left-[24px] md:left-1/2 top-8 w-4 h-4 bg-[#000d1a] border-[2px] border-[#00e5ff] rotate-45 -translate-x-1/2 z-10 shadow-[0_0_15px_rgba(0,229,255,0.8)]" />
 
-                    {/* Desktop Layout left offset spacer */}
-                    <div className={`hidden md:block w-1/2 ${isEven ? 'pr-12 text-right order-1' : 'pl-12 text-left order-2'}`}>
-                      {/* Spacer remains empty, date pills are attached to the card */}
+                    {/* Desktop Layout left offset spacer (Time HUD) */}
+                    <div className={`hidden md:flex w-1/2 ${isEven ? 'pr-16 justify-end order-1' : 'pl-16 justify-start order-2'}`}>
+                       <div className="mt-6 flex items-center h-fit">
+                         <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#000d1a] border border-[#00e5ff]/40 text-[#00e5ff] text-xs font-mono font-bold shadow-[inset_0_0_15px_rgba(0,229,255,0.2)]" style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}>
+                           <Calendar className="w-3.5 h-3.5" />
+                           [ {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`} ]
+                         </span>
+                       </div>
                     </div>
 
-                    {/* Desktop Layout right offset content */}
+                    {/* Card Content */}
                     <motion.div
-                      initial={{ opacity: 0, x: isEven ? -32 : 32 }}
+                      initial={{ opacity: 0, x: isEven ? -40 : 40 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, margin: '-80px' }}
                       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                      className={`w-full md:w-1/2 ${isEven ? 'pl-10 md:pl-12 order-2' : 'pr-10 md:pr-12 order-1'}`}
+                      className={`w-full md:w-1/2 ${isEven ? 'md:pl-16 order-2' : 'md:pr-16 order-1'}`}
                     >
                       {/* Mobile Time Frame above card */}
-                      <div className="md:hidden mb-3">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-accent-light text-accent-primary text-[10px] font-bold rounded-full">
+                      <div className="md:hidden mb-4 pl-14">
+                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#000d1a] border border-[#00e5ff]/40 text-[#00e5ff] text-[10px] font-mono font-bold shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
                           <Calendar className="w-3 h-3" />
-                          {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`}
+                          [ {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`} ]
                         </span>
                       </div>
 
-                      <Card glass className="p-6 rounded-2xl relative">
-                        {/* Desktop Date Pills */}
-                        <div className={`hidden md:block absolute top-5 whitespace-nowrap ${isEven ? 'right-full mr-12 pr-0.5' : 'left-full ml-12 pl-0.5'}`}>
-                          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-accent-light border border-accent-primary/20 text-accent-primary text-xs font-bold rounded-full shadow-sm">
-                            <Calendar className="w-3.5 h-3.5" />
-                            {exp.start_month} {exp.start_year} - {exp.is_current ? 'Present' : `${exp.end_month} ${exp.end_year}`}
-                          </span>
-                        </div>
-
+                      <div className="p-6 md:p-8 rounded-xl relative overflow-hidden group border-2 border-[#00e5ff]/30 bg-[#000d1a]/95 backdrop-blur-lg shadow-[0_0_25px_rgba(0,229,255,0.15)] hover:border-[#00e5ff]/60 hover:shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all ml-12 md:ml-0 z-10">
+                        {/* Scanline */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/10 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
+                        
                         {/* Header block */}
-                        <div className="flex items-center gap-3.5 border-b border-border-subtle pb-4 mb-4">
-                          <div className="w-12 h-12 rounded-xl bg-bg-primary border border-border-subtle flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-b border-[rgba(0,229,255,0.1)] pb-5 mb-5 relative z-10">
+                          <div className="w-14 h-14 rounded bg-[#000d1a] border border-[rgba(0,229,255,0.3)] flex items-center justify-center p-2 shrink-0 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)] overflow-hidden">
                             {exp.company_logo_url ? (
                               <img
                                 src={exp.company_logo_url}
@@ -244,14 +252,14 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                                 className="object-contain w-full h-full"
                               />
                             ) : (
-                              <Globe className="w-6 h-6 text-text-tertiary" />
+                              <Globe className="w-6 h-6 text-[#00b4d8]" />
                             )}
                           </div>
                           <div className="overflow-hidden">
-                            <h3 className="text-base font-bold text-text-primary truncate font-display">{exp.role}</h3>
-                            <div className="flex flex-wrap items-center gap-2 mt-0.5">
-                              <span className="text-xs font-semibold text-text-secondary">{exp.company_name}</span>
-                              <span className="text-[10px] text-text-tertiary font-bold tracking-wider uppercase bg-bg-primary px-2 py-0.5 rounded border border-border-subtle">
+                            <h3 className="text-lg md:text-xl font-bold text-[#e0f7fa] font-display">{exp.role}</h3>
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              <span className="text-sm font-semibold text-[#00b4d8]">{exp.company_name}</span>
+                              <span className="text-[9px] text-[#00ff88] font-bold tracking-widest uppercase bg-[#00ff88]/10 px-2 py-0.5 rounded border border-[#00ff88]/30">
                                 {exp.employment_type}
                               </span>
                             </div>
@@ -261,17 +269,18 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                         {/* HTML Details */}
                         {exp.description && (
                           <div
-                            className="text-text-secondary text-xs md:text-sm leading-relaxed mb-4 space-y-2"
+                            className="text-[#80deea] text-xs md:text-sm leading-relaxed mb-5 relative z-10"
                             dangerouslySetInnerHTML={{ __html: exp.description }}
                           />
                         )}
 
                         {/* Achievements bullets */}
                         {exp.achievements.length > 0 && (
-                          <ul className="list-disc list-inside space-y-1.5 text-xs text-text-secondary mb-4 pr-1.5">
+                          <ul className="space-y-2 text-xs md:text-sm text-[#80deea] mb-5 relative z-10 font-mono">
                             {exp.achievements.map((bullet, bIdx) => (
-                              <li key={bIdx} className="leading-relaxed">
-                                <span className="font-medium text-text-secondary">{bullet}</span>
+                              <li key={bIdx} className="leading-relaxed flex items-start gap-2">
+                                <span className="text-[#00e5ff] font-bold shrink-0 mt-0.5">{`>`}</span>
+                                <span>{bullet}</span>
                               </li>
                             ))}
                           </ul>
@@ -279,11 +288,12 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
                         {/* Tech stack chips */}
                         {exp.tech_stack.length > 0 && (
-                          <div className="flex flex-wrap gap-1 pt-1.5">
+                          <div className="flex flex-wrap gap-2 pt-2 relative z-10">
                             {exp.tech_stack.map((tag, tIdx) => (
                               <span
                                 key={tIdx}
-                                className="text-[9px] font-bold font-mono tracking-wide uppercase px-2 py-1 bg-white border border-border-default rounded-md text-text-secondary"
+                                className="text-[10px] font-bold font-mono tracking-wider uppercase px-2.5 py-1 bg-[rgba(0,229,255,0.05)] border border-[rgba(0,229,255,0.2)] text-[#00e5ff]"
+                                style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}
                               >
                                 {tag}
                               </span>
@@ -293,17 +303,17 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
                         {/* Certificate / Credential Footer */}
                         {hasCert && (
-                          <div className="mt-4 pt-3 border-t border-border-subtle flex flex-wrap items-center justify-between gap-2">
-                            {/* Certificate of Completion direct link (certificate_url) */}
+                          <div className="mt-6 pt-4 border-t border-[rgba(0,229,255,0.1)] flex flex-wrap items-center justify-between gap-3 relative z-10">
+                            {/* Certificate of Completion direct link */}
                             {exp.certificate_url && (
                               <a
                                 href={exp.certificate_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-green-600 hover:text-green-700 hover:underline cursor-pointer transition-colors"
+                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00ff88] hover:text-white hover:bg-[#00ff88]/20 px-3 py-1.5 rounded border border-[#00ff88]/30 transition-colors"
                               >
-                                <Award className="w-3 h-3" />
-                                <span>Certificate of Completion</span>
+                                <Award className="w-3.5 h-3.5" />
+                                <span>Verify Certificate</span>
                               </a>
                             )}
 
@@ -312,15 +322,15 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                               <button
                                 type="button"
                                 onClick={() => setActiveCert(exp)}
-                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent-primary hover:text-accent-hover hover:underline cursor-pointer transition-colors ml-auto"
+                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00e5ff] hover:text-white hover:bg-[#00e5ff]/20 px-3 py-1.5 rounded border border-[#00e5ff]/30 transition-colors ml-auto"
                               >
-                                <ShieldCheck className="w-3 h-3" />
-                                <span>Verify Reference Credential</span>
+                                <ShieldCheck className="w-3.5 h-3.5" />
+                                <span>View Document</span>
                               </button>
                             )}
                           </div>
                         )}
-                      </Card>
+                      </div>
                     </motion.div>
                   </div>
                 );

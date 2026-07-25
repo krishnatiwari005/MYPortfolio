@@ -11,7 +11,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <div className="relative w-full">
         <select
           className={cn(
-            'flex h-10 w-full rounded-xl border border-border-default bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-accent-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 appearance-none cursor-pointer',
+            'flex h-10 w-full rounded-xl border border-border-default bg-[#001a33] px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 focus:border-accent-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 appearance-none cursor-pointer',
             error && 'border-error focus:ring-error/40 focus:border-error',
             className
           )}

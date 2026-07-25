@@ -40,8 +40,8 @@ export const LockButton = ({
       className={cn(
         'fixed bottom-6 z-[150] flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-primary/50',
         isAdmin
-          ? 'bg-accent-light border border-accent-primary text-accent-primary opacity-100'
-          : 'glass-card text-text-secondary opacity-60 hover:opacity-100'
+          ? 'bg-[#00e5ff] border border-[#00e5ff] text-[#001a33] opacity-100 shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:shadow-[0_0_25px_rgba(0,229,255,0.6)]'
+          : 'bg-[#001a33] border border-[#00e5ff]/30 text-[#00e5ff] opacity-60 hover:opacity-100 hover:border-[#00e5ff]/60 hover:shadow-[0_0_15px_rgba(0,229,255,0.3)]'
       )}
     >
       {isAdmin ? <LockOpen className="w-4 h-4" /> : <Lock className="w-4 h-4" />}

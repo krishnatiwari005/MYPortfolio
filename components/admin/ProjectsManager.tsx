@@ -58,7 +58,7 @@ const SortableProjectItem = ({ project, onEdit, onDuplicate, onDelete }: Sortabl
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-3 bg-white border border-border-default rounded-2xl hover:border-accent-primary/40 transition-colors shadow-sm"
+      className="flex items-center justify-between p-3 bg-[#001a33] border border-border-default rounded-2xl hover:border-accent-primary/40 transition-colors shadow-sm"
     >
       <div className="flex items-center gap-3 overflow-hidden">
         <button
@@ -565,7 +565,7 @@ export const ProjectsManager = () => {
               {watchGallery.length > 0 && (
                 <div className="grid grid-cols-3 gap-2 mt-2 border border-border-default p-2 rounded-xl bg-bg-primary/50">
                   {watchGallery.map((url, idx) => (
-                    <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-border-subtle bg-white">
+                    <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-border-subtle bg-[#001a33]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={url} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
                       <button

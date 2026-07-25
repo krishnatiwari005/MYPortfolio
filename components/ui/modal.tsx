@@ -48,7 +48,7 @@ export const Modal = ({
                   exit={{ opacity: 0, scale: 0.95, y: 16 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 26 }}
                   className={cn(
-                    'w-full bg-white rounded-3xl p-8 relative shadow-float focus:outline-none overflow-hidden my-8',
+                    'w-full bg-[#001a33] rounded-3xl p-8 relative shadow-float focus:outline-none overflow-hidden my-8',
                     maxWidth
                   )}
                 >

@@ -83,7 +83,7 @@ export default function ResumeViewer() {
   return (
     <div className="min-h-screen flex flex-col bg-text-tertiary/10">
       {/* Sticky Toolbar */}
-      <header className="sticky top-0 z-50 h-14 bg-white border-b border-border-default/50 flex items-center justify-between px-4 md:px-8 shadow-sm">
+      <header className="sticky top-0 z-50 h-14 bg-[rgba(0,13,26,0.95)] backdrop-blur-md border-b border-[rgba(0,229,255,0.1)] flex items-center justify-between px-4 md:px-8 shadow-sm">
         <div className="flex items-center gap-4 min-w-0">
           <Link
             href="/"
@@ -163,7 +163,7 @@ export default function ResumeViewer() {
             {Array.from(new Array(numPages), (el, index) => (
               <div
                 key={`page_${index + 1}`}
-                className="bg-white p-2 rounded-xl shadow-md border border-border-subtle"
+                className="bg-[rgba(0,13,26,0.8)] p-2 rounded-xl shadow-[0_0_15px_rgba(0,229,255,0.1)] border border-[rgba(0,229,255,0.2)]"
                 style={{ transform: `scale(${zoom})`, transformOrigin: 'top center' }}
               >
                 <Page

@@ -6,6 +6,8 @@ import './globals.css';
 import QueryProvider from '@/components/shared/QueryProvider';
 import { Toaster } from 'react-hot-toast';
 import { getSeoSettings, getHero } from '@/lib/supabase/queries';
+import AnimatedBackground from '@/components/portfolio/AnimatedBackground';
+import CustomCursor from '@/components/ui/custom-cursor';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -64,6 +66,7 @@ export default function RootLayout({
             });
           }
         `}</Script>
+        <AnimatedBackground />
         <QueryProvider>
           {children}
           <Toaster
@@ -72,6 +75,7 @@ export default function RootLayout({
               duration: 4000,
             }}
           />
+          <CustomCursor />
         </QueryProvider>
       </body>
     </html>

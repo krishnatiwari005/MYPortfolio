@@ -5,6 +5,7 @@ import {
   getExperience,
   getProjects,
   getCertificates,
+  getHackathons,
   getResume,
   getSettings,
 } from '@/lib/supabase/queries';
@@ -15,13 +16,14 @@ export const revalidate = 3600; // 1 hour revalidation cache
 
 export default async function HomePage() {
   // Query all database values in parallel
-  const [hero, about, skills, experience, projects, certificates, resume, settings] = await Promise.all([
+  const [hero, about, skills, experience, projects, certificates, hackathons, resume, settings] = await Promise.all([
     getHero(),
     getAbout(),
     getSkills(),
     getExperience(),
     getProjects(),
     getCertificates(),
+    getHackathons(),
     getResume(),
     getSettings(),
   ]);
@@ -34,6 +36,7 @@ export default async function HomePage() {
       experience={experience}
       projects={projects}
       certificates={certificates}
+      hackathons={hackathons}
       resume={resume}
       settings={settings}
     />

@@ -1,34 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #FAFAFA;
-  --color-bg-secondary: #FFFFFF;
-  --color-bg-glass: rgba(255, 255, 255, 0.70);
-  --color-bg-glass-border: rgba(255, 255, 255, 0.85);
-  --color-text-primary: #0D0D0D;
-  --color-text-secondary: #3D3D3D;
-  --color-text-tertiary: #717171;
-  --color-accent-primary: #4F46E5;
-  --color-accent-hover: #4338CA;
-  --color-accent-light: #EEF2FF;
-  --color-accent-glow: rgba(79, 70, 229, 0.15);
+  --color-bg-primary: #000d1a;
+  --color-bg-secondary: #000d1a;
+  --color-bg-glass: rgba(0, 229, 255, 0.05);
+  --color-bg-glass-border: rgba(0, 229, 255, 0.15);
+  --color-text-primary: #e0f7fa;
+  --color-text-secondary: #80deea;
+  --color-text-tertiary: #50b0c0;
+  --color-accent-primary: #00e5ff;
+  --color-accent-hover: #00b4d8;
+  --color-accent-light: #00ffe7;
+  --color-accent-glow: rgba(0, 229, 255, 0.15);
   --color-success: #10B981;
   --color-error: #EF4444;
-  --color-border-subtle: rgba(0, 0, 0, 0.06);
-  --color-border-default: rgba(0, 0, 0, 0.10);
+  --color-border-subtle: rgba(0, 229, 255, 0.06);
+  --color-border-default: rgba(0, 229, 255, 0.10);
 
   --font-display: 'Clash Display Variable', 'Inter', system-ui;
   --font-body: 'Inter', system-ui;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --shadow-float: 0 24px 48px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 40px rgba(79, 70, 229, 0.12);
+  --shadow-float: 0 24px 48px rgba(0, 229, 255, 0.08), 0 4px 8px rgba(0, 229, 255, 0.04);
+  --shadow-glow: 0 0 40px rgba(0, 229, 255, 0.12);
 }
 
 :root {
-  --gradient-hero: linear-gradient(135deg, #F0F4FF 0%, #FAF5FF 50%, #F0FDF4 100%);
-  --gradient-accent: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
-  --gradient-text: linear-gradient(135deg, #4F46E5, #7C3AED);
+  --gradient-hero: linear-gradient(135deg, #00b4d8, #00e5ff);
+  --gradient-accent: linear-gradient(135deg, #00b4d8 0%, #00e5ff 100%);
+  --gradient-text: linear-gradient(135deg, #00b4d8, #00e5ff);
 
   --mouse-x: 50%;
   --mouse-y: 50%;
@@ -44,13 +44,54 @@ body {
   padding: 0;
 }
 
-/* Glassmorphism utility */
+/* Scanline overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 229, 255, 0.015) 2px,
+    rgba(0, 229, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Glow text utility */
+.text-glow {
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.5),
+               0 0 40px rgba(0, 229, 255, 0.2);
+}
+
+/* Cyan gradient button */
+.btn-cyber {
+  background: linear-gradient(135deg, #00b4d8, #00e5ff);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4),
+              0 0 60px rgba(0, 229, 255, 0.1);
+  color: #000d1a;
+  font-weight: 700;
+  transition: box-shadow 0.3s ease;
+}
+.btn-cyber:hover {
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.7),
+              0 0 80px rgba(0, 229, 255, 0.2);
+}
+
+/* Glass card */
 .glass-card {
-  background: rgba(255, 255, 255, 0.70);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+  background: rgba(0, 229, 255, 0.03);
+  border: 1px solid rgba(0, 229, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-card:hover {
+  border-color: rgba(0, 229, 255, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 229, 255, 0.12),
+              inset 0 1px 0 rgba(0, 229, 255, 0.1);
 }
 
 /* Mouse follow glow pseudo-element */
@@ -63,10 +104,22 @@ body::before {
   height: 100vh;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(circle 400px at var(--mouse-x) var(--mouse-y), rgba(79, 70, 229, 0.06), transparent 100%);
+  background: radial-gradient(circle 400px at var(--mouse-x) var(--mouse-y), rgba(0, 229, 255, 0.06), transparent 100%);
 }
 
-/* Background Drifting Orbs Animations */
+/* Animations */
+@keyframes shimmer {
+  0%, 100% { text-shadow: 0 0 20px rgba(0,229,255,0.3); }
+  50% { text-shadow: 0 0 40px rgba(0,229,255,0.7), 
+                     0 0 80px rgba(0,229,255,0.2); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(0, 255, 136, 0); }
+}
+
+/* Background Drifting Orbs Animations (kept for fallback/safety) */
 @keyframes drift-indigo {
   0% { transform: translate(0px, 0px) scale(1); }
   33% { transform: translate(40px, -60px) scale(1.1); }
@@ -90,17 +143,17 @@ body::before {
 
 .orb-indigo {
   animation: drift-indigo 25s infinite ease-in-out;
-  background: radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0) 70%);
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, rgba(0, 229, 255, 0) 70%);
 }
 
 .orb-purple {
   animation: drift-purple 28s infinite ease-in-out;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, rgba(124, 58, 237, 0) 70%);
+  background: radial-gradient(circle, rgba(0, 180, 216, 0.1) 0%, rgba(0, 180, 216, 0) 70%);
 }
 
 .orb-emerald {
   animation: drift-emerald 22s infinite ease-in-out;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0) 70%);
+  background: radial-gradient(circle, rgba(0, 255, 231, 0.08) 0%, rgba(0, 255, 231, 0) 70%);
 }
 
 /* TipTap Editor Styling Reset */
@@ -145,4 +198,8 @@ body::before {
   .grid {
     display: block !important;
   }
+}
+@media (pointer: fine) { 
+  * { cursor: none !important; } 
+  a, a *, button, button *, input, textarea, select, [role="button"], .cursor-pointer, .cursor-pointer * { cursor: pointer !important; } 
 }

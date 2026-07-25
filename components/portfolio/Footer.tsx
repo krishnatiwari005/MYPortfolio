@@ -22,7 +22,7 @@ export const Footer = ({ hero, settings }: FooterProps) => {
   ].filter((link) => link.href);
 
   return (
-    <footer className="w-full h-20 border-t border-border-subtle bg-white relative z-10">
+    <footer className="w-full h-20 border-t border-[rgba(0,229,255,0.1)] bg-[rgba(0,13,26,0.5)] backdrop-blur-md relative z-10">
       <div className="w-full max-w-[1100px] mx-auto h-full px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
         {/* Left: Copyright */}
         <p className="text-text-tertiary font-medium">

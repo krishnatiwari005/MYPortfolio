@@ -105,6 +105,19 @@ export interface Certificate {
   updated_at: string;
 }
 
+export interface Hackathon {
+  id: string;
+  title: string;
+  organization: string;
+  date: string;
+  project_url: string | null;
+  github_url: string | null;
+  certificate_url: string | null;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Resume {
   id: boolean;
   file_url: string;
@@ -158,6 +171,7 @@ export interface Database {
       experience: { Row: Experience; Insert: Partial<Experience>; Update: Partial<Experience> };
       projects: { Row: Project; Insert: Partial<Project>; Update: Partial<Project> };
       certificates: { Row: Certificate; Insert: Partial<Certificate>; Update: Partial<Certificate> };
+      hackathons: { Row: Hackathon; Insert: Partial<Hackathon>; Update: Partial<Hackathon> };
       resume: { Row: Resume; Insert: Partial<Resume>; Update: Partial<Resume> };
       seo_settings: { Row: SeoSettings; Insert: Partial<SeoSettings>; Update: Partial<SeoSettings> };
       settings: { Row: Settings; Insert: Partial<Settings>; Update: Partial<Settings> };
