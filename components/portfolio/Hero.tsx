@@ -184,10 +184,6 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
                 animate={{ rotate: [45, -315] }}
                 transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
                 className="absolute inset-[-25px] border-[2px] border-[#00b4d8]/30 pointer-events-none"
-                style={{
-                  borderStyle: 'dashed',
-                  borderDasharray: '8 16',
-                }}
               />
 
               {/* Static Enhanced Glowing Diamond (Behind Image) */}
