@@ -199,7 +199,4 @@ body::before {
     display: block !important;
   }
 }
-@media (pointer: fine) { 
-  * { cursor: none !important; } 
-  a, a *, button, button *, input, textarea, select, [role="button"], .cursor-pointer, .cursor-pointer * { cursor: pointer !important; } 
-}
+
