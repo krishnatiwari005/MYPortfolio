@@ -67,7 +67,7 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
         </div>
 
         {/* Side-by-Side Container */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-8 items-start">
           
           {/* Left Side: Core Skills */}
           <div className="space-y-8 flex flex-col">
@@ -76,7 +76,7 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
               <h3 className="text-2xl font-bold font-display text-[#e0f7fa] tracking-wide">Core Domains</h3>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative flex-grow">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
               {coreSkills.length === 0 && (
                 <div className="col-span-1 sm:col-span-2 py-8 text-center text-[#00b4d8]/60 font-mono text-xs">
                   No Core Domains configured. Add them in the Skills Manager.
@@ -92,12 +92,12 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
                   viewport={{ once: true }}
                   transition={{ type: 'spring', stiffness: 300, damping: 25, delay: index * 0.1 }}
                   whileHover={{ scale: 1.03 }}
-                  className="group h-full relative"
+                  className="group relative"
                 >
                   <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
                   <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
 
-                  <div className="h-full p-5 glass-card rounded-lg flex flex-col gap-4 relative overflow-hidden transition-all duration-300 border border-[rgba(0,229,255,0.15)] group-hover:border-[#00e5ff]/60 group-hover:bg-[#00e5ff]/5 z-10">
+                  <div className="p-5 glass-card rounded-lg flex flex-col gap-6 relative overflow-hidden transition-all duration-300 border border-[rgba(0,229,255,0.15)] group-hover:border-[#00e5ff]/60 group-hover:bg-[#00e5ff]/5 z-10">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/10 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
                     
                     <div className="flex items-start justify-between z-10">
@@ -172,7 +172,7 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
               ))}
             </div>
 
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative flex-grow">
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#00e5ff]/5 blur-[120px] rounded-full pointer-events-none" />
 
               <AnimatePresence mode="popLayout">
@@ -187,12 +187,12 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
                     exit={{ opacity: 0, scale: 0.9, y: 20, transition: { duration: 0.2 } }}
                     transition={{ type: 'spring', stiffness: 300, damping: 25, delay: index * 0.03 }}
                     whileHover={{ scale: 1.03 }}
-                    className="group h-full relative"
+                    className="group relative"
                   >
                     <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
                     <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
 
-                    <div className="h-full p-4 glass-card rounded-lg flex flex-col gap-3 relative overflow-hidden transition-all duration-300 border border-[rgba(0,229,255,0.15)] group-hover:border-[#00e5ff]/60 group-hover:bg-[#00e5ff]/5 z-10">
+                    <div className="p-4 glass-card rounded-lg flex flex-col gap-4 relative overflow-hidden transition-all duration-300 border border-[rgba(0,229,255,0.15)] group-hover:border-[#00e5ff]/60 group-hover:bg-[#00e5ff]/5 z-10">
                       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/10 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
                       
                       <div className="flex items-start justify-between z-10">
