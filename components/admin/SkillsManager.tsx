@@ -51,6 +51,9 @@ const SortableSkillItem = ({ skill, onEdit, onDelete }: SkillItemProps) => {
     zIndex: isDragging ? 20 : 1,
   };
 
+  const actualCategory = skill.category.replace('CORE:', '').replace('TECH:', '');
+  const isCore = skill.category.startsWith('CORE:');
+
   return (
     <div
       ref={setNodeRef}
@@ -75,9 +78,12 @@ const SortableSkillItem = ({ skill, onEdit, onDelete }: SkillItemProps) => {
           )}
         </div>
         <div className="overflow-hidden">
-          <h4 className="text-sm font-semibold text-text-primary truncate">{skill.name}</h4>
-          <p className="text-[11px] text-text-tertiary">
-            {skill.category} • {skill.years} yrs • {skill.proficiency}%
+          <h4 className="text-sm font-semibold text-text-primary truncate">
+            {skill.name} 
+            {isCore && <span className="ml-2 text-[9px] px-1.5 py-0.5 rounded bg-accent-primary/20 text-accent-primary border border-accent-primary/30">Core Domain</span>}
+          </h4>
+          <p className="text-[11px] text-text-tertiary mt-0.5">
+            {actualCategory} • {skill.years} yrs • {skill.proficiency}%
           </p>
         </div>
       </div>
@@ -122,9 +128,10 @@ export const SkillsManager = () => {
   });
 
   // Form setup
-  const { register, handleSubmit, setValue, watch, reset } = useForm<Partial<Skill>>({
+  const { register, handleSubmit, setValue, watch, reset } = useForm<any>({
     defaultValues: {
       name: '',
+      type: 'Tech Stack Node',
       category: 'Frontend',
       logo_url: '',
       years: 1,
@@ -139,10 +146,18 @@ export const SkillsManager = () => {
 
   // Mutations
   const saveMutation = useMutation({
-    mutationFn: async (formData: Partial<Skill>) => {
+    mutationFn: async (formData: any) => {
       let isNew = !editingSkill;
+      
+      const categoryPrefix = formData.type === 'Core Domain' ? 'CORE:' : 'TECH:';
+      const finalCategory = categoryPrefix + formData.category;
+
       let payload = {
-        ...formData,
+        name: formData.name,
+        category: finalCategory,
+        logo_url: formData.logo_url,
+        years: formData.years,
+        proficiency: formData.proficiency,
         display_order: editingSkill?.display_order ?? skills.length,
       };
 
@@ -170,7 +185,7 @@ export const SkillsManager = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-skills'] });
       setModalOpen(false);
       setEditingSkill(null);
-      reset({ name: '', category: 'Frontend', logo_url: '', years: 1, proficiency: 80 });
+      reset({ name: '', type: 'Tech Stack Node', category: 'Frontend', logo_url: '', years: 1, proficiency: 80 });
       toast.success('Skill saved successfully');
     },
     onError: (err: any) => {
@@ -247,21 +262,31 @@ export const SkillsManager = () => {
   };
 
   const handleEditClick = (skill: Skill) => {
+    const isCore = skill.category.startsWith('CORE:');
+    const actualCategory = skill.category.replace('CORE:', '').replace('TECH:', '');
+
     setEditingSkill(skill);
-    reset(skill);
+    reset({
+      ...skill,
+      type: isCore ? 'Core Domain' : 'Tech Stack Node',
+      category: actualCategory
+    });
     setModalOpen(true);
   };
 
   const handleAddClick = () => {
     setEditingSkill(null);
-    reset({ name: '', category: 'Frontend', logo_url: '', years: 1, proficiency: 80 });
+    reset({ name: '', type: 'Tech Stack Node', category: 'Frontend', logo_url: '', years: 1, proficiency: 80 });
     setModalOpen(true);
   };
 
-  const categories = ['All', 'Frontend', 'Backend', 'DevOps', 'Mobile', 'Tools', 'Management'];
+  // We should extract unique clean categories
+  const rawCategories = Array.from(new Set(skills.map(s => s.category.replace('CORE:', '').replace('TECH:', ''))));
+  const categoriesList = ['All', ...rawCategories];
+
   const filteredSkills = activeCategory === 'All'
     ? skills
-    : skills.filter((s) => s.category.toLowerCase() === activeCategory.toLowerCase());
+    : skills.filter((s) => s.category.replace('CORE:', '').replace('TECH:', '').toLowerCase() === activeCategory.toLowerCase());
 
   if (isLoading) {
     return <div className="space-y-6 animate-pulse"><Skeleton className="h-10 w-full" /><Skeleton className="h-60 w-full" /></div>;
@@ -281,7 +306,7 @@ export const SkillsManager = () => {
 
       {/* Category Tabs */}
       <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar border-b border-border-subtle">
-        {categories.map((cat) => (
+        {categoriesList.map((cat) => (
           <button
             key={cat}
             type="button"
@@ -328,30 +353,31 @@ export const SkillsManager = () => {
         <form onSubmit={handleSubmit((data) => saveMutation.mutate(data))} className="space-y-4">
           <div className="space-y-1">
             <label className="text-xs font-semibold text-text-secondary">Skill Name</label>
-            <Input {...register('name', { required: true })} placeholder="e.g. Next.js, Go, Docker" />
+            <Input {...register('name', { required: true })} placeholder="e.g. Generative AI, Next.js" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Category</label>
-              <Select {...register('category')}>
-                <option value="Frontend">Frontend</option>
-                <option value="Backend">Backend</option>
-                <option value="DevOps">DevOps</option>
-                <option value="Mobile">Mobile</option>
-                <option value="Tools">Tools</option>
-                <option value="Management">Management</option>
+              <label className="text-xs font-semibold text-text-secondary">Skill Type</label>
+              <Select {...register('type')}>
+                <option value="Tech Stack Node">Tech Stack Node (Right Side)</option>
+                <option value="Core Domain">Core Domain (Left Side)</option>
               </Select>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Years of Experience</label>
-              <Input
-                type="number"
-                step="0.1"
-                {...register('years', { valueAsNumber: true })}
-                placeholder="e.g. 3.5"
-              />
+              <label className="text-xs font-semibold text-text-secondary">Category Label</label>
+              <Input {...register('category', { required: true })} placeholder="e.g. AI/ML, Frontend" />
             </div>
+          </div>
+          
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-text-secondary">Years of Experience</label>
+            <Input
+              type="number"
+              step="0.1"
+              {...register('years', { valueAsNumber: true })}
+              placeholder="e.g. 3.5"
+            />
           </div>
 
           <div className="space-y-1">
@@ -366,7 +392,7 @@ export const SkillsManager = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-text-secondary">Logo Image</label>
+            <label className="text-xs font-semibold text-text-secondary">Logo Image (Optional for Core)</label>
             <FileUpload
               folder="logos"
               accept="image/*"
