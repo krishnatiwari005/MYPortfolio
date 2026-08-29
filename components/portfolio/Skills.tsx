@@ -1,7 +1,6 @@
 'use client';
-// Cache-bust comment: cyberpunk-skills-v3
+// Cache-bust comment: cyberpunk-skills-v4
 
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skill } from '@/types';
 import { Globe, Cpu, Zap, Code2 } from 'lucide-react';
@@ -11,19 +10,10 @@ export interface SkillsSectionProps {
 }
 
 export const SkillsSection = ({ skills }: SkillsSectionProps) => {
-  const [activeCategory, setActiveCategory] = useState('All');
 
   // Split skills into Core Domains and Tech Stack
   const coreSkills = skills.filter((s) => s.category.startsWith('CORE:'));
   const techSkills = skills.filter((s) => !s.category.startsWith('CORE:'));
-
-  // Extract unique clean categories for Tech Stack Nodes only
-  const cleanTechCategories = techSkills.map(s => s.category.replace('TECH:', ''));
-  const categories = ['All', ...Array.from(new Set(cleanTechCategories))];
-
-  const filteredTechSkills = activeCategory === 'All'
-    ? techSkills
-    : techSkills.filter((s) => s.category.replace('TECH:', '').toLowerCase() === activeCategory.toLowerCase());
 
   // Cyberpunk Category Color Mapper
   const getCategoryColor = (cat: string) => {
@@ -97,42 +87,42 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
                   <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
                   <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
 
-                  <div className="p-5 glass-card rounded-lg flex flex-col gap-6 relative overflow-hidden transition-all duration-300 border border-[rgba(0,229,255,0.15)] group-hover:border-[#00e5ff]/60 group-hover:bg-[#00e5ff]/5 z-10">
+                  <div className="p-4 glass-card rounded-lg flex flex-col gap-4 relative overflow-hidden transition-all duration-300 border border-[rgba(0,229,255,0.15)] group-hover:border-[#00e5ff]/60 group-hover:bg-[#00e5ff]/5 z-10">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/10 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
                     
                     <div className="flex items-start justify-between z-10">
-                      <div className="w-12 h-12 shrink-0 rounded bg-[#000d1a] border border-[rgba(0,229,255,0.3)] flex items-center justify-center p-2.5 overflow-hidden group-hover:border-[#00e5ff] transition-all relative">
+                      <div className="w-10 h-10 shrink-0 rounded bg-[#000d1a] border border-[rgba(0,229,255,0.3)] flex items-center justify-center p-2 overflow-hidden group-hover:border-[#00e5ff] transition-all relative">
                         {skill.logo_url ? (
                             <img
                               src={skill.logo_url}
                               alt={skill.name}
-                              width={32}
-                              height={32}
+                              width={24}
+                              height={24}
                               loading="lazy"
                               className="object-contain w-full h-full group-hover:scale-110 transition-transform duration-300"
                             />
                         ) : (
-                            <Cpu className="w-6 h-6 text-[#00b4d8] group-hover:text-[#00e5ff] group-hover:animate-pulse transition-all duration-300" />
+                            <Cpu className="w-5 h-5 text-[#00b4d8] group-hover:text-[#00e5ff] group-hover:animate-pulse transition-all duration-300" />
                         )}
                       </div>
-                      <div className={`text-[9px] font-bold px-2 py-1 border rounded shadow-sm uppercase tracking-widest ${getCategoryColor(cleanCat)}`}>
+                      <div className={`text-[8px] font-bold px-1.5 py-0.5 border rounded shadow-sm uppercase tracking-widest ${getCategoryColor(cleanCat)}`}>
                         {cleanCat}
                       </div>
                     </div>
 
                     <div className="mt-auto z-10">
-                      <div className="flex items-end justify-between mb-2">
-                        <h3 className="text-lg font-extrabold text-[#e0f7fa] font-display group-hover:text-[#00e5ff] transition-colors leading-tight tracking-wide">{skill.name}</h3>
-                        <span className="text-[10px] font-bold text-[#00b4d8] font-mono group-hover:text-[#00e5ff]">
+                      <div className="flex items-end justify-between mb-1.5">
+                        <h3 className="text-sm font-extrabold text-[#e0f7fa] font-display group-hover:text-[#00e5ff] transition-colors leading-none tracking-wide truncate pr-2">{skill.name}</h3>
+                        <span className="text-[9px] font-bold text-[#00b4d8] font-mono group-hover:text-[#00e5ff]">
                           {skill.proficiency}%
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-[#000d1a] border border-[rgba(0,229,255,0.2)] rounded-sm overflow-hidden relative">
+                      <div className="w-full h-1.5 bg-[#000d1a] border border-[rgba(0,229,255,0.2)] rounded-sm overflow-hidden relative">
                         <motion.div
                           initial={{ width: 0 }}
                           whileInView={{ width: `${skill.proficiency}%` }}
                           viewport={{ once: true }}
-                          transition={{ duration: 1.5, ease: "circOut", delay: 0.2 }}
+                          transition={{ duration: 1.5, ease: "circOut", delay: 0.1 }}
                           className="h-full absolute left-0 top-0"
                           style={{
                             background: 'repeating-linear-gradient(90deg, #00e5ff, #00e5ff 4px, transparent 4px, transparent 6px)',
@@ -154,29 +144,11 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
               <h3 className="text-2xl font-bold font-display text-[#e0f7fa] tracking-wide">Tech Stack Nodes</h3>
             </div>
             
-            {/* HUD Filter Bar */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none justify-start max-w-full no-scrollbar relative">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`relative px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-300 transform ${
-                    activeCategory === cat
-                      ? 'text-[#000d1a] bg-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.5)] scale-105'
-                      : 'text-[#80deea] bg-[#000d1a]/80 border border-[rgba(0,229,255,0.3)] hover:text-[#00e5ff] hover:border-[#00e5ff]'
-                  }`}
-                  style={{ clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0 100%)' }}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
             <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#00e5ff]/5 blur-[120px] rounded-full pointer-events-none" />
 
               <AnimatePresence mode="popLayout">
-                {filteredTechSkills.map((skill, index) => {
+                {techSkills.map((skill, index) => {
                   const cleanCat = skill.category.replace('TECH:', '');
                   return (
                   <motion.div
