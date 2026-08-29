@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, type Variants } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { GitBranch, Link2, MessageCircle, Mail, ArrowRight, Download, Code2 } from 'lucide-react';
 import { Hero } from '@/types';
 import Button from '../ui/button';
@@ -56,9 +56,23 @@ const AnimatedCounter = ({ value }: { value: string | undefined }) => {
 export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSectionProps) => {
   const name = data?.name ?? 'Jane Doe';
   const role = data?.role ?? 'Full Stack Developer';
-  const tagline = data?.tagline ?? 'Building premium, high-performance web products with clean architecture.';
   const available = data?.available ?? true;
   const availabilityLabel = data?.availability_label ?? 'Available for new opportunities';
+
+  // Parse pipe-separated taglines
+  const rawTagline = data?.tagline ?? '🚀 Building intelligent AI solutions that solve real-world problems.';
+  const taglines = rawTagline.split('|').map((t) => t.trim()).filter(Boolean);
+
+  const [taglineIndex, setTaglineIndex] = useState(0);
+
+  // Rotate tagline every 3.5 seconds
+  useEffect(() => {
+    if (taglines.length <= 1) return;
+    const interval = setInterval(() => {
+      setTaglineIndex((prev) => (prev + 1) % taglines.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [taglines.length]);
 
   const socialLinks = [
     { icon: GitBranch, href: data?.github_url, label: 'GitHub' },
@@ -117,9 +131,21 @@ export const HeroSection = ({ data, onContactClick, onResumeClick }: HeroSection
             {role}
           </motion.p>
 
-          <motion.p variants={itemVariants} className="text-base md:text-lg text-[#80deea] max-w-md leading-relaxed">
-            {tagline}
-          </motion.p>
+          {/* Rotating tagline with min-height to avoid layout shift */}
+          <motion.div variants={itemVariants} className="min-h-[4rem] flex items-start">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={taglineIndex}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.45, ease: 'easeInOut' }}
+                className="text-base md:text-lg text-[#80deea] max-w-md leading-relaxed"
+              >
+                {taglines[taglineIndex]}
+              </motion.p>
+            </AnimatePresence>
+          </motion.div>
 
           {/* Social Row Desktop */}
           <motion.div variants={itemVariants} className="hidden sm:flex items-center gap-2.5 pt-2">
