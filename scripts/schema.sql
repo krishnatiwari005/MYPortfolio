@@ -118,6 +118,20 @@ create table if not exists certificates (
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- 6b. Hackathons
+create table if not exists hackathons (
+  id uuid primary key default uuid_generate_v4(),
+  title text not null,
+  organization text not null,
+  date text not null,
+  project_url text,
+  github_url text,
+  certificate_url text,
+  display_order integer not null default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- 7. Resume (singleton or single active record)
 create table if not exists resume (
   id bool primary key default true,
@@ -176,6 +190,7 @@ alter table skills enable row level security;
 alter table experience enable row level security;
 alter table projects enable row level security;
 alter table certificates enable row level security;
+alter table hackathons enable row level security;
 alter table resume enable row level security;
 alter table seo_settings enable row level security;
 alter table settings enable row level security;
@@ -205,6 +220,10 @@ create policy "Admin write projects" on projects for all using (auth.role() = 'a
 -- Certificates
 create policy "Public read certificates" on certificates for select using (true);
 create policy "Admin write certificates" on certificates for all using (auth.role() = 'authenticated');
+
+-- Hackathons
+create policy "Public read hackathons" on hackathons for select using (true);
+create policy "Admin write hackathons" on hackathons for all using (auth.role() = 'authenticated');
 
 -- Resume
 create policy "Public read resume" on resume for select using (true);

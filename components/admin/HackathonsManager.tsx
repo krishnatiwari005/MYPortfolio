@@ -14,6 +14,7 @@ import Modal from '../ui/modal';
 import ConfirmDialog from '../ui/confirm-dialog';
 import FileUpload from '../shared/file-upload';
 import Skeleton from '../ui/skeleton';
+import { revalidatePortfolio } from '@/lib/utils';
 
 import {
   DndContext,
@@ -161,11 +162,7 @@ export const HackathonsManager = () => {
         description: `${isNew ? 'Added' : 'Updated'} hackathon: ${formData.title}`,
       });
 
-      await fetch('/api/revalidate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paths: ['/'] }),
-      });
+      await revalidatePortfolio(['/']);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-hackathons'] });
@@ -191,11 +188,7 @@ export const HackathonsManager = () => {
         description: `Deleted hackathon: ${hack.title}`,
       });
 
-      await fetch('/api/revalidate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paths: ['/'] }),
-      });
+      await revalidatePortfolio(['/']);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-hackathons'] });
@@ -212,11 +205,7 @@ export const HackathonsManager = () => {
         supabase.from('hackathons').update({ display_order: index }).eq('id', hack.id)
       );
       await Promise.all(updates);
-      await fetch('/api/revalidate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paths: ['/'] }),
-      });
+      await revalidatePortfolio(['/']);
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-hackathons'] }),
   });
