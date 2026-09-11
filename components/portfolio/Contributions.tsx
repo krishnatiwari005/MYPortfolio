@@ -101,25 +101,11 @@ export const Contributions = ({ hero }: ContributionsProps) => {
 
               <div className="p-8 md:p-10 rounded-2xl border border-[#00e5ff]/20 bg-[#001a33]/80 backdrop-blur-md shadow-[0_0_30px_rgba(0,229,255,0.1)] flex flex-col items-center group-hover:border-[#00e5ff]/40 transition-all">
                 <div className="flex items-center gap-3 mb-8 w-full justify-between border-b border-[#00e5ff]/10 pb-4">
-                  <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-3">
                     <Terminal className="w-5 h-5 text-[#00ff88]" />
                     <h3 className="text-[12px] font-bold font-mono text-[#00ff88] uppercase tracking-widest">
                       [MODULE: GITHUB_CONTRIBUTIONS]
                     </h3>
-                    {/* Admin-only warning badge */}
-                    <div className="relative group/warn">
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold font-mono text-[#ff3333] border border-[#ff3333]/60 bg-[#ff0000]/10 animate-pulse shadow-[0_0_8px_rgba(255,0,0,0.4)] cursor-default select-none">
-                        &#9888; RESTRICTED &middot; ADMIN ONLY
-                      </span>
-                      <div className="absolute left-0 top-full mt-2 z-50 hidden group-hover/warn:flex flex-col gap-1 w-72 p-3 rounded-lg border border-[#ff3333]/70 bg-[#0d0000]/95 shadow-[0_0_24px_rgba(255,0,0,0.5)] backdrop-blur-md pointer-events-none">
-                        <p className="text-[10px] font-extrabold font-mono text-[#ff3333] uppercase tracking-widest">&#9940; UNAUTHORIZED ACCESS DETECTED</p>
-                        <p className="text-[10px] font-mono text-[#ff9999] leading-relaxed">
-                          This module is protected and managed exclusively by the site administrator. Do{' '}
-                          <span className="text-[#ff3333] font-bold">NOT</span> attempt to modify, replicate,
-                          or reverse-engineer its contents. All access attempts are logged and monitored.
-                        </p>
-                      </div>
-                    </div>
                   </div>
                   <a
                     href={hero?.github_url ?? '#'}
@@ -168,25 +154,11 @@ export const Contributions = ({ hero }: ContributionsProps) => {
 
               <div className="p-8 md:p-10 rounded-2xl border border-[#ff00ff]/20 bg-[#001a33]/80 backdrop-blur-md shadow-[0_0_30px_rgba(255,0,255,0.08)] flex flex-col items-center group-hover:border-[#ff00ff]/40 transition-all">
                 <div className="flex items-center gap-3 mb-8 w-full justify-between border-b border-[#ff00ff]/10 pb-4">
-                  <div className="flex items-center gap-3 flex-wrap">
+                  <div className="flex items-center gap-3">
                     <Terminal className="w-5 h-5 text-[#ff00ff]" />
                     <h3 className="text-[12px] font-bold font-mono text-[#ff00ff] uppercase tracking-widest">
                       [MODULE: LEETCODE_CONSISTENCY]
                     </h3>
-                    {/* Admin-only warning badge */}
-                    <div className="relative group/warn">
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold font-mono text-[#ff3333] border border-[#ff3333]/60 bg-[#ff0000]/10 animate-pulse shadow-[0_0_8px_rgba(255,0,0,0.4)] cursor-default select-none">
-                        &#9888; RESTRICTED &middot; ADMIN ONLY
-                      </span>
-                      <div className="absolute left-0 top-full mt-2 z-50 hidden group-hover/warn:flex flex-col gap-1 w-72 p-3 rounded-lg border border-[#ff3333]/70 bg-[#0d0000]/95 shadow-[0_0_24px_rgba(255,0,0,0.5)] backdrop-blur-md pointer-events-none">
-                        <p className="text-[10px] font-extrabold font-mono text-[#ff3333] uppercase tracking-widest">&#9940; UNAUTHORIZED ACCESS DETECTED</p>
-                        <p className="text-[10px] font-mono text-[#ff9999] leading-relaxed">
-                          This module is protected and managed exclusively by the site administrator. Do{' '}
-                          <span className="text-[#ff3333] font-bold">NOT</span> attempt to modify, replicate,
-                          or reverse-engineer its contents. All access attempts are logged and monitored.
-                        </p>
-                      </div>
-                    </div>
                   </div>
                   <a
                     href={hero?.leetcode_url ?? '#'}
