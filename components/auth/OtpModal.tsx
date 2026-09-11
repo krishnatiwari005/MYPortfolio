@@ -100,7 +100,16 @@ export const OtpModal = ({ isOpen, onClose, onSuccess }: OtpModalProps) => {
                 <p className="text-sm text-text-tertiary mt-1">
                   Enter your email to receive a 6-digit code
                 </p>
+                {/* Admin-only notice */}
+                <div className="mt-3 flex items-start gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-left">
+                  <span className="text-red-400 text-base leading-none mt-0.5">⚠</span>
+                  <p className="text-[11px] text-red-300 leading-relaxed">
+                    <span className="font-bold text-red-400 uppercase tracking-wide">Restricted Area — Admin Only.</span>{' '}
+                    This portal is exclusively for the site administrator. Unauthorized access attempts are strictly prohibited.
+                  </p>
+                </div>
               </div>
+
 
               <div className="w-full space-y-3 pt-2">
                 <div className="space-y-2">
