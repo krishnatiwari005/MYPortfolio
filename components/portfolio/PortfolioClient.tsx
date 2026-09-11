@@ -18,7 +18,7 @@ import ContactSection from './Contact';
 import Footer from './Footer';
 
 // Admin / Auth Portals
-import LockButton from '../auth/LockButton';
+
 import OtpModal from '../auth/OtpModal';
 import AdminPanel from '../auth/AdminPanel';
 import GeometricBackground from '../ui/GeometricBackground';
@@ -108,25 +108,18 @@ export default function PortfolioClient({
         <ResumeSection data={resume} />
         <ContactSection data={hero} />
         <Contributions hero={hero} />
-        <Footer hero={hero} settings={settings} />
+        <Footer hero={hero} settings={settings} isAdmin={isAdmin} onTogglePanel={() => {
+          // Toggle panel if admin, otherwise open login modal
+          if (isAdmin) {
+            setPanelOpen((prev) => !prev);
+          } else {
+            setLoginOpen(true);
+          }
+        }} onOpenLogin={() => setLoginOpen(true)} />
       </motion.div>
 
       {/* Admin Control Widgets — hidden while auth is being checked */}
-      {!loading && (
-        <LockButton
-          isAdmin={isAdmin}
-          panelOpen={panelOpen}
-          onTogglePanel={() => {
-            // Only allow opening the panel if actually authenticated
-            if (isAdmin) {
-              setPanelOpen((prev) => !prev);
-            } else {
-              setLoginOpen(true);
-            }
-          }}
-          onOpenLogin={() => setLoginOpen(true)}
-        />
-      )}
+
 
       <OtpModal
         isOpen={loginOpen}

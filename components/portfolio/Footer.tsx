@@ -3,13 +3,17 @@
 import { GitBranch, Link2, MessageCircle, Mail, Code2 } from 'lucide-react';
 import { Hero, Settings } from '@/types';
 import { formatDate } from '@/lib/utils';
+import LockButton from '../auth/LockButton';
 
 export interface FooterProps {
   hero: Hero | null;
   settings: Settings | null;
+  isAdmin: boolean;
+  onTogglePanel: () => void;
+  onOpenLogin: () => void;
 }
 
-export const Footer = ({ hero, settings }: FooterProps) => {
+export const Footer = ({ hero, settings, isAdmin, onTogglePanel, onOpenLogin }: FooterProps) => {
   const currentYear = new Date().getFullYear();
   const name = hero?.name ?? 'Jane Doe';
 
@@ -48,12 +52,19 @@ export const Footer = ({ hero, settings }: FooterProps) => {
           })}
         </div>
 
-        {/* Right: Last Updated */}
-        <p className="text-text-tertiary font-medium">
-          {settings?.last_updated_at && (
-            <span>Last updated: {formatDate(settings.last_updated_at)}</span>
-          )}
-        </p>
+        {/* Right: Last Updated + Admin Lock */}
+        <div className="flex items-center gap-3">
+          <p className="text-text-tertiary font-medium">
+            {settings?.last_updated_at && (
+              <span>Last updated: {formatDate(settings.last_updated_at)}</span>
+            )}
+          </p>
+          <LockButton
+            isAdmin={isAdmin}
+            onTogglePanel={onTogglePanel}
+            onOpenLogin={onOpenLogin}
+          />
+        </div>
       </div>
     </footer>
   );
