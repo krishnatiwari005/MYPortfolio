@@ -67,6 +67,30 @@ export async function POST(req: NextRequest) {
     }
 
     if (normalizedEmail !== adminEmail) {
+      // ── Send warning email to admin ──
+      try {
+        const transporter = createTransporter();
+        const warningMailOptions = {
+          from: `"Security Alert" <${process.env.GMAIL_USER}>`,
+          to: adminEmail,
+          subject: '🚨 Unauthorized Admin Access Attempt',
+          html: `
+            <div style="font-family: sans-serif; padding: 20px; color: #333; max-width: 600px; border: 1px solid #fee2e2; border-radius: 8px; background-color: #fef2f2;">
+              <h2 style="color: #dc2626; margin-top: 0;">Unauthorized Login Attempt</h2>
+              <p style="font-size: 15px;">Someone attempted to request an OTP code for your portfolio admin portal using an unauthorized email address.</p>
+              <div style="background: #ffffff; padding: 15px; border-radius: 6px; border: 1px solid #fecaca; margin-top: 20px;">
+                <p style="margin: 0 0 10px 0;"><strong>Attempted Email:</strong> <span style="color: #b91c1c;">${normalizedEmail}</span></p>
+                <p style="margin: 0;"><strong>Time (UTC):</strong> ${new Date().toISOString()}</p>
+              </div>
+              <p style="font-size: 13px; color: #6b7280; margin-top: 20px;">If this was you testing the system, you can safely ignore this alert.</p>
+            </div>
+          `,
+        };
+        await transporter.sendMail(warningMailOptions);
+      } catch (mailErr) {
+        console.error('[send-otp] Failed to send warning email:', mailErr);
+      }
+
       // Return generic error to avoid exposing which emails are admin
       return NextResponse.json(
         { error: 'Email not authorized' },
