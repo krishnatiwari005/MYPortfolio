@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Experience } from '@/types';
 import Card from '../ui/card';
-import { Globe, ExternalLink, Calendar, X, Award, Download, Maximize2, Minimize2, ShieldCheck } from 'lucide-react';
+import { Globe, ExternalLink, Calendar, X, Award, Download, Maximize2, Minimize2, ShieldCheck, Printer } from 'lucide-react';
 
 export interface ExperienceSectionProps {
   experiences: Experience[];
@@ -25,6 +25,37 @@ const CertModal = ({ exp, viewType, onClose }: CertModalProps) => {
   const displayUrl = viewType === 'document' ? exp.certificate_file_url : exp.certificate_url;
   const isImage = displayUrl?.match(/\.(jpeg|jpg|gif|png|webp|svg)(\?.*)?$/i);
   const isPdf = displayUrl?.toLowerCase().split('?')[0].endsWith('.pdf');
+
+  const handlePrint = () => {
+    if (!displayUrl) return;
+    
+    if (isImage) {
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Print Certificate</title>
+              <style>
+                @media print {
+                  @page { margin: 0; }
+                  body { margin: 0; }
+                }
+                body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+                img { max-width: 100%; max-height: 100vh; object-fit: contain; }
+              </style>
+            </head>
+            <body>
+              <img src="${displayUrl}" onload="window.print(); window.close();" />
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }
+    } else {
+      window.open(displayUrl, '_blank');
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -55,8 +86,10 @@ const CertModal = ({ exp, viewType, onClose }: CertModalProps) => {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle bg-bg-secondary shrink-0">
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="p-1.5 rounded-lg bg-accent-light">
-                {viewType === 'document' ? (
+              <div className="p-1.5 rounded-lg bg-accent-light overflow-hidden flex items-center justify-center shrink-0">
+                {exp.company_logo_url ? (
+                  <img src={exp.company_logo_url} alt={exp.company_name} className="w-4 h-4 object-contain" />
+                ) : viewType === 'document' ? (
                   <ShieldCheck className="w-4 h-4 text-accent-primary" />
                 ) : (
                   <Award className="w-4 h-4 text-[#00ff88]" />
@@ -72,6 +105,14 @@ const CertModal = ({ exp, viewType, onClose }: CertModalProps) => {
               </div>
             </div>
             <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onClick={handlePrint}
+                className="p-1.5 text-text-tertiary hover:text-accent-primary hover:bg-accent-light rounded-lg cursor-pointer transition-colors"
+                title="Print"
+              >
+                <Printer className="w-4 h-4" />
+              </button>
               <button
                 type="button"
                 onClick={() => setExpanded((v) => !v)}
