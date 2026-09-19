@@ -14,16 +14,17 @@ export interface ExperienceSectionProps {
 // ---------- Certificate Preview Modal ----------
 interface CertModalProps {
   exp: Experience;
+  viewType: 'certificate' | 'document';
   onClose: () => void;
 }
 
-const CertModal = ({ exp, onClose }: CertModalProps) => {
+const CertModal = ({ exp, viewType, onClose }: CertModalProps) => {
   const [expanded, setExpanded] = useState(false);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  const fileUrl = exp.certificate_file_url;  // offer letter
-  const completionUrl = exp.certificate_url;  // certificate of completion
-  const isPdf = fileUrl?.toLowerCase().endsWith('.pdf');
+  const displayUrl = viewType === 'document' ? exp.certificate_file_url : exp.certificate_url;
+  const isImage = displayUrl?.match(/\.(jpeg|jpg|gif|png|webp|svg)(\?.*)?$/i);
+  const isPdf = displayUrl?.toLowerCase().split('?')[0].endsWith('.pdf');
 
   return (
     <AnimatePresence>
@@ -48,20 +49,26 @@ const CertModal = ({ exp, onClose }: CertModalProps) => {
           className={`relative z-10 bg-[rgba(0,13,26,0.9)] backdrop-blur-xl rounded-2xl shadow-[0_0_40px_rgba(0,229,255,0.15)] border border-[rgba(0,229,255,0.2)] flex flex-col overflow-hidden transition-all duration-300 ${
             expanded
               ? 'w-full max-w-5xl h-[95vh]'
-              : 'w-full max-w-lg h-[85vh]'
+              : 'w-full max-w-4xl h-[85vh]'
           }`}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle bg-bg-secondary shrink-0">
             <div className="flex items-center gap-2.5 overflow-hidden">
               <div className="p-1.5 rounded-lg bg-accent-light">
-                <ShieldCheck className="w-4 h-4 text-accent-primary" />
+                {viewType === 'document' ? (
+                  <ShieldCheck className="w-4 h-4 text-accent-primary" />
+                ) : (
+                  <Award className="w-4 h-4 text-[#00ff88]" />
+                )}
               </div>
               <div className="overflow-hidden">
                 <p className="text-xs font-bold text-text-primary truncate font-display">
                   {exp.role} — {exp.company_name}
                 </p>
-                <p className="text-[10px] text-text-tertiary">Offer Letter / Reference Document</p>
+                <p className="text-[10px] text-text-tertiary">
+                  {viewType === 'document' ? 'Offer Letter / Reference Document' : 'Certificate of Completion'}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1 shrink-0">
@@ -83,67 +90,55 @@ const CertModal = ({ exp, onClose }: CertModalProps) => {
             </div>
           </div>
 
-          {/* Content Area — scrollable by the modal, not the PDF viewer */}
+          {/* Content Area */}
           <div
             ref={scrollRef}
             className="flex-1 min-h-0 overflow-y-auto bg-[rgba(0,13,26,0.9)]"
           >
-            {fileUrl ? (
-              isPdf ? (
-                /* Tall iframe so the full PDF renders from the top */
+            {displayUrl ? (
+              isImage ? (
+                /* Image: show full with padding */
+                <div className="p-4 flex items-center justify-center min-h-full">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={displayUrl}
+                    alt={`${exp.role} Document`}
+                    className="max-w-full object-contain rounded-lg shadow-sm"
+                  />
+                </div>
+              ) : (
+                /* Iframe for PDF or web pages */
                 <iframe
-                  src={`${fileUrl}#toolbar=0&navpanes=0&zoom=page-width`}
-                  className="w-full block border-0"
+                  src={isPdf ? `${displayUrl}#toolbar=0&navpanes=0&zoom=page-width` : displayUrl}
+                  className="w-full block border-0 bg-white"
                   style={{ height: '900px' }}
-                  title="Offer Letter Preview"
+                  title="Document Preview"
                   onLoad={() => {
                     if (scrollRef.current) scrollRef.current.scrollTop = 0;
                   }}
                 />
-              ) : (
-                /* Image: show full with padding */
-                <div className="p-4 flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={fileUrl}
-                    alt={`${exp.role} Offer Letter`}
-                    className="max-w-full object-contain rounded-lg shadow-sm"
-                  />
-                </div>
               )
             ) : (
               /* No file */
-              <div className="flex flex-col items-center justify-center gap-3 text-center py-16 px-4">
+              <div className="flex flex-col items-center justify-center gap-3 text-center py-16 px-4 h-full">
                 <Award className="w-16 h-16 text-accent-primary/20" />
-                <p className="text-sm font-semibold text-text-secondary">No offer letter uploaded</p>
-                <p className="text-xs text-text-tertiary">Upload an offer letter in the admin dashboard</p>
+                <p className="text-sm font-semibold text-text-secondary">Document not available</p>
               </div>
             )}
           </div>
 
           {/* Footer Actions */}
           <div className="px-5 py-3.5 border-t border-border-subtle bg-bg-secondary flex flex-wrap gap-2 justify-end shrink-0">
-            {fileUrl && (
+            {displayUrl && (
               <a
-                href={fileUrl}
+                href={displayUrl}
                 download
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-bg-primary hover:bg-border-subtle border border-border-default rounded-lg text-text-secondary transition-colors cursor-pointer"
               >
-                <Download className="w-3.5 h-3.5" />
-                Download Offer Letter
-              </a>
-            )}
-            {completionUrl && (
-              <a
-                href={completionUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 rounded-lg transition-colors cursor-pointer"
-              >
-                <Award className="w-3.5 h-3.5" />
-                View Completion Certificate
+                <ExternalLink className="w-3.5 h-3.5" />
+                Open in New Tab
               </a>
             )}
           </div>
@@ -155,7 +150,7 @@ const CertModal = ({ exp, onClose }: CertModalProps) => {
 
 // ---------- Main Section ----------
 export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
-  const [activeCert, setActiveCert] = useState<Experience | null>(null);
+  const [activeModal, setActiveModal] = useState<{ exp: Experience; type: 'certificate' | 'document' } | null>(null);
 
   return (
     <>
@@ -303,26 +298,25 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
                         {/* Certificate / Credential Footer */}
                         {hasCert && (
-                          <div className="mt-6 pt-4 border-t border-[rgba(0,229,255,0.1)] flex flex-wrap items-center justify-between gap-3 relative z-10">
+                          <div className="mt-6 pt-4 border-t border-[rgba(0,229,255,0.1)] flex flex-row items-center gap-4 relative z-10">
                             {/* Certificate of Completion direct link */}
                             {exp.certificate_url && (
-                              <a
-                                href={exp.certificate_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <button
+                                type="button"
+                                onClick={() => setActiveModal({ exp, type: 'certificate' })}
                                 className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00ff88] hover:text-white hover:bg-[#00ff88]/20 px-3 py-1.5 rounded border border-[#00ff88]/30 transition-colors"
                               >
                                 <Award className="w-3.5 h-3.5" />
                                 <span>Verify Certificate</span>
-                              </a>
+                              </button>
                             )}
 
                             {/* Verify Reference Credential → opens modal with offer letter */}
                             {exp.certificate_file_url && (
                               <button
                                 type="button"
-                                onClick={() => setActiveCert(exp)}
-                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00e5ff] hover:text-white hover:bg-[#00e5ff]/20 px-3 py-1.5 rounded border border-[#00e5ff]/30 transition-colors ml-auto"
+                                onClick={() => setActiveModal({ exp, type: 'document' })}
+                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00e5ff] hover:text-white hover:bg-[#00e5ff]/20 px-3 py-1.5 rounded border border-[#00e5ff]/30 transition-colors"
                               >
                                 <ShieldCheck className="w-3.5 h-3.5" />
                                 <span>View Document</span>
@@ -341,8 +335,8 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
       </section>
 
       {/* Certificate Preview Modal */}
-      {activeCert && (
-        <CertModal exp={activeCert} onClose={() => setActiveCert(null)} />
+      {activeModal && (
+        <CertModal exp={activeModal.exp} viewType={activeModal.type} onClose={() => setActiveModal(null)} />
       )}
     </>
   );
