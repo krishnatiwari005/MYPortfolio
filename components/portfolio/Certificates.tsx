@@ -263,34 +263,45 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
               </div>
 
               {/* Footer actions */}
-              <div className="p-4 border-t border-[#00e5ff]/20 flex flex-wrap gap-3 justify-end bg-[#001a33]/80">
-                {activeLightbox.pdf_url && (
-                  <button
-                    onClick={() => window.open(activeLightbox.pdf_url!, '_blank')}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-mono font-bold text-xs uppercase tracking-widest transition-all"
-                    style={{ clipPath: 'polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)' }}
-                  >
-                    <Download className="w-3.5 h-3.5" /> Download PDF
-                  </button>
-                )}
-                {activeLightbox.credential_url && (
-                  <button
-                    onClick={() => window.open(activeLightbox.credential_url!, '_blank')}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/30 border border-[#00e5ff] text-[#00e5ff] hover:text-white font-mono font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.5)]"
-                    style={{ clipPath: 'polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)' }}
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" /> Verify Credential
-                  </button>
-                )}
-                {activeLightbox.github_url && (
-                  <button
-                    onClick={() => window.open(activeLightbox.github_url!, '_blank')}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-mono font-bold text-xs uppercase tracking-widest transition-all"
-                    style={{ clipPath: 'polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)' }}
-                  >
-                    <GitBranch className="w-3.5 h-3.5" /> GitHub Repo
-                  </button>
-                )}
+              <div className="p-4 border-t border-[#00e5ff]/20 flex flex-wrap items-center justify-between gap-4 bg-[#001a33]/80">
+                <div className="flex flex-wrap gap-2">
+                  {activeLightbox.github_url && activeLightbox.github_url.split(',').map((url, idx) => {
+                    const cleanUrl = url.trim();
+                    if (!cleanUrl) return null;
+                    const isMulti = activeLightbox.github_url!.split(',').filter(u => u.trim()).length > 1;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => window.open(cleanUrl, '_blank')}
+                        className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-mono font-bold text-xs uppercase tracking-widest transition-all"
+                        style={{ clipPath: 'polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)' }}
+                      >
+                        <Globe className="w-3.5 h-3.5" /> Project {isMulti ? idx + 1 : ''}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <div className="flex flex-wrap gap-3">
+                  {activeLightbox.pdf_url && (
+                    <button
+                      onClick={() => window.open(activeLightbox.pdf_url!, '_blank')}
+                      className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-mono font-bold text-xs uppercase tracking-widest transition-all"
+                      style={{ clipPath: 'polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)' }}
+                    >
+                      <Download className="w-3.5 h-3.5" /> Download PDF
+                    </button>
+                  )}
+                  {activeLightbox.credential_url && (
+                    <button
+                      onClick={() => window.open(activeLightbox.credential_url!, '_blank')}
+                      className="flex items-center gap-2 px-4 py-2 bg-[#00e5ff]/10 hover:bg-[#00e5ff]/30 border border-[#00e5ff] text-[#00e5ff] hover:text-white font-mono font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.5)]"
+                      style={{ clipPath: 'polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)' }}
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" /> Verify Credential
+                    </button>
+                  )}
+                </div>
               </div>
             </motion.div>
           </div>

@@ -325,8 +325,8 @@ export const CertificatesManager = () => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-text-secondary">GitHub Repository URL</label>
-            <Input {...register('github_url')} placeholder="e.g. https://github.com/..." />
+            <label className="text-xs font-semibold text-text-secondary">Project URLs (comma-separated)</label>
+            <Input {...register('github_url')} placeholder="e.g. https://example.com/project1, https://example.com/project2" />
           </div>
 
           <div className="space-y-2">
