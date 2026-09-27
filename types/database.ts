@@ -98,6 +98,7 @@ export interface Certificate {
   issuer: string;
   issue_date: string;
   credential_url: string | null;
+  github_url: string | null;
   preview_image_url: string | null;
   pdf_url: string | null;
   display_order: number;

@@ -124,6 +124,7 @@ export const CertificatesManager = () => {
       issuer: '',
       issue_date: '',
       credential_url: '',
+      github_url: '',
       preview_image_url: '',
       pdf_url: '',
     },
@@ -167,7 +168,7 @@ export const CertificatesManager = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-certificates'] });
       setModalOpen(false);
       setEditingCert(null);
-      reset({ title: '', issuer: '', issue_date: '', credential_url: '', preview_image_url: '', pdf_url: '' });
+      reset({ title: '', issuer: '', issue_date: '', credential_url: '', github_url: '', preview_image_url: '', pdf_url: '' });
       toast.success('Certificate saved successfully');
     },
     onError: (err: any) => {
@@ -254,7 +255,7 @@ export const CertificatesManager = () => {
 
   const handleAddClick = () => {
     setEditingCert(null);
-    reset({ title: '', issuer: '', issue_date: '', credential_url: '', preview_image_url: '', pdf_url: '' });
+    reset({ title: '', issuer: '', issue_date: '', credential_url: '', github_url: '', preview_image_url: '', pdf_url: '' });
     setModalOpen(true);
   };
 
@@ -321,6 +322,11 @@ export const CertificatesManager = () => {
           <div className="space-y-1">
             <label className="text-xs font-semibold text-text-secondary">Credential Link URL</label>
             <Input {...register('credential_url')} placeholder="e.g. https://credly.com/..." />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-text-secondary">GitHub Repository URL</label>
+            <Input {...register('github_url')} placeholder="e.g. https://github.com/..." />
           </div>
 
           <div className="space-y-2">

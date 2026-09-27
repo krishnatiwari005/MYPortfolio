@@ -111,6 +111,7 @@ create table if not exists certificates (
   issuer text not null,
   issue_date text not null,
   credential_url text,
+  github_url text,
   preview_image_url text,
   pdf_url text,
   display_order integer not null default 0,
