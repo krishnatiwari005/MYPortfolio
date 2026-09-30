@@ -26,10 +26,11 @@ export const AboutSection = ({ data }: AboutSectionProps) => {
     <section id="about" className="py-12 md:py-20 relative z-10 scroll-mt-12">
       <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          initial={{ opacity: 0, rotateX: 75, y: 60 }}
+          whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+          style={{ transformOrigin: 'top', perspective: 2000 }}
           className="relative glass-card rounded-3xl p-8 md:p-12 overflow-hidden border border-[rgba(0,229,255,0.15)] shadow-[0_0_40px_rgba(0,229,255,0.05)]"
         >
           {/* Cyberpunk accents */}
