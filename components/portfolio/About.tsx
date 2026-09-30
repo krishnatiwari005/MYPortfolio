@@ -24,7 +24,7 @@ export const AboutSection = ({ data }: AboutSectionProps) => {
 
   return (
     <section id="about" className="py-12 md:py-20 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12">
+      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
