@@ -13,6 +13,7 @@ export interface ProjectsSectionProps {
 export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   // Extract unique categories from DB
   const categories = ['All', ...Array.from(new Set(projects.map((p) => p.category)))];
@@ -189,14 +190,14 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
         {selectedProject && (
           <div className="fixed inset-0 z-[201] flex items-center justify-center p-4 overflow-y-auto">
             {/* Backdrop close wrapper */}
-            <div className="fixed inset-0 bg-black/80 backdrop-blur-md" onClick={() => setSelectedProject(null)} />
+            <div className="fixed inset-0 bg-black/90" onClick={() => setSelectedProject(null)} />
 
             {/* Modal Card content */}
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              className="relative w-full max-w-5xl bg-[#000d1a]/95 backdrop-blur-xl border-2 border-[#00e5ff]/40 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(0,229,255,0.2)] z-10 flex flex-col max-h-[95vh] my-4"
+              exit={{ opacity: 0, scale: 0.96, transition: { duration: 0 } }}
+              className="relative w-full max-w-5xl bg-[#000d1a] border-2 border-[#00e5ff]/40 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(0,229,255,0.2)] z-10 flex flex-col max-h-[95vh] my-4"
             >
               {/* HUD Modal Border Accents */}
               <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#00e5ff] z-20 pointer-events-none" />
@@ -214,29 +215,28 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
               </button>
 
               {/* Scrollable container */}
-              <div className="flex-1 overflow-y-auto pb-8 cyber-scrollbar">
+              <div className="flex-1 overflow-y-auto pb-8 cyber-scrollbar overscroll-contain transform-gpu" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {/* Visual Banner */}
-                <div className="relative aspect-video md:aspect-[21/9] w-full bg-[#000d1a] overflow-hidden border-b border-[#00e5ff]/20">
+                <div className="relative w-full bg-[#000d1a] border-b border-[#00e5ff]/20 overflow-hidden max-h-[60vh]">
                   {selectedProject.thumbnail_url ? (
                     <img
                       src={selectedProject.thumbnail_url}
                       alt={selectedProject.title}
-                      className="w-full h-full object-cover opacity-100"
+                      className="w-full h-auto object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-[linear-gradient(rgba(0,229,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]" />
                   )}
-                  {/* Digital overlay - subtle so image remains visible */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#000d1a]/90 via-[#000d1a]/30 to-transparent flex items-end p-6 md:p-10 z-10 pointer-events-none">
-                    <div className="space-y-3 w-full">
-                      <div className="text-[10px] font-bold font-mono tracking-widest uppercase px-3 py-1 bg-[#ff00ff]/20 border border-[#ff00ff]/50 text-[#ff00ff] inline-block shadow-[0_0_15px_rgba(255,0,255,0.3)]" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
-                        SYSTEM_CATEGORY: {selectedProject.category}
-                      </div>
-                      <h2 className="text-3xl md:text-5xl font-extrabold font-display tracking-tight text-[#e0f7fa] leading-tight text-glow">
-                        <span className="text-[#00e5ff] mr-2 opacity-50">&gt;</span>
-                        {selectedProject.title}
-                      </h2>
+                </div>
+
+                <div className="px-6 md:px-10 pt-8 pb-4">
+                  <div className="space-y-3 w-full flex flex-col items-center text-center">
+                    <div className="text-[10px] font-bold font-mono tracking-widest uppercase px-3 py-1 bg-[#ff00ff]/20 border border-[#ff00ff]/50 text-[#ff00ff] inline-block shadow-[0_0_15px_rgba(255,0,255,0.3)]" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
+                      SYSTEM_CATEGORY: {selectedProject.category}
                     </div>
+                    <h2 className="text-3xl md:text-5xl font-extrabold font-display tracking-tight text-[#e0f7fa] leading-tight text-glow">
+                      {selectedProject.title}
+                    </h2>
                   </div>
                 </div>
 
@@ -246,68 +246,74 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
                   <div className="flex-1 space-y-8">
                     {/* Bio */}
                     {selectedProject.description && (
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2">
+                      <details open className="group space-y-3 cursor-pointer">
+                        <summary className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2 list-none marker:hidden">
                           <Info className="w-4 h-4" /> [ OVERVIEW ]
-                        </h4>
-                        <div className="text-[#80deea] text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedProject.description }} />
-                      </div>
+                          <span className="ml-auto group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <div className="text-[#80deea] text-sm leading-relaxed pt-2 cursor-auto" dangerouslySetInnerHTML={{ __html: selectedProject.description }} />
+                      </details>
                     )}
 
                     {/* Problem */}
                     {selectedProject.problem_statement && (
-                      <div className="space-y-3 p-5 bg-[#ff003c]/5 border-l-4 border-[#ff003c] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-2 opacity-10">
+                      <details open className="group space-y-3 p-5 bg-[#ff003c]/5 border-l-4 border-[#ff003c] relative overflow-hidden cursor-pointer">
+                        <summary className="text-xs font-bold font-mono text-[#ff003c] uppercase tracking-widest flex items-center gap-2 relative z-10 list-none marker:hidden">
+                          <ShieldAlert className="w-4 h-4" /> [ MISSION_CRITICAL: PROBLEM ]
+                          <span className="ml-auto group-open:rotate-180 transition-transform text-[#ff003c]">▼</span>
+                        </summary>
+                        <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
                           <ShieldAlert className="w-24 h-24 text-[#ff003c]" />
                         </div>
-                        <h4 className="text-xs font-bold font-mono text-[#ff003c] uppercase tracking-widest flex items-center gap-2 relative z-10">
-                          <ShieldAlert className="w-4 h-4" /> [ MISSION_CRITICAL: PROBLEM ]
-                        </h4>
-                        <div className="text-[#ffb3c1] text-sm leading-relaxed relative z-10 font-mono" dangerouslySetInnerHTML={{ __html: selectedProject.problem_statement }} />
-                      </div>
+                        <div className="text-[#ffb3c1] text-sm leading-relaxed relative z-10 font-mono pt-2 cursor-auto" dangerouslySetInnerHTML={{ __html: selectedProject.problem_statement }} />
+                      </details>
                     )}
 
                     {/* Solution */}
                     {selectedProject.solution && (
-                      <div className="space-y-3 p-5 bg-[#00ff88]/5 border-l-4 border-[#00ff88] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-2 opacity-10">
+                      <details open className="group space-y-3 p-5 bg-[#00ff88]/5 border-l-4 border-[#00ff88] relative overflow-hidden cursor-pointer">
+                        <summary className="text-xs font-bold font-mono text-[#00ff88] uppercase tracking-widest flex items-center gap-2 relative z-10 list-none marker:hidden">
+                          <Award className="w-4 h-4" /> [ EXECUTION: SOLUTION ]
+                          <span className="ml-auto group-open:rotate-180 transition-transform text-[#00ff88]">▼</span>
+                        </summary>
+                        <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
                           <Award className="w-24 h-24 text-[#00ff88]" />
                         </div>
-                        <h4 className="text-xs font-bold font-mono text-[#00ff88] uppercase tracking-widest flex items-center gap-2 relative z-10">
-                          <Award className="w-4 h-4" /> [ EXECUTION: SOLUTION ]
-                        </h4>
-                        <div className="text-[#a7f3d0] text-sm leading-relaxed relative z-10" dangerouslySetInnerHTML={{ __html: selectedProject.solution }} />
-                      </div>
+                        <div className="text-[#a7f3d0] text-sm leading-relaxed relative z-10 pt-2 cursor-auto" dangerouslySetInnerHTML={{ __html: selectedProject.solution }} />
+                      </details>
                     )}
 
                     {/* Architecture */}
                     {selectedProject.architecture && (
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2">
+                      <details open className="group space-y-3 cursor-pointer">
+                        <summary className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2 list-none marker:hidden">
                           <Cpu className="w-4 h-4" /> [ SYS_ARCHITECTURE ]
-                        </h4>
-                        <div className="text-[#80deea] text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedProject.architecture }} />
-                      </div>
+                          <span className="ml-auto group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <div className="text-[#80deea] text-sm leading-relaxed pt-2 cursor-auto" dangerouslySetInnerHTML={{ __html: selectedProject.architecture }} />
+                      </details>
                     )}
 
                     {/* Key features */}
                     {selectedProject.key_features && (
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2">
+                      <details open className="group space-y-3 cursor-pointer">
+                        <summary className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2 list-none marker:hidden">
                           <Info className="w-4 h-4" /> [ PROTOCOL_FEATURES ]
-                        </h4>
-                        <div className="text-[#80deea] text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedProject.key_features }} />
-                      </div>
+                          <span className="ml-auto group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <div className="text-[#80deea] text-sm leading-relaxed pt-2 cursor-auto" dangerouslySetInnerHTML={{ __html: selectedProject.key_features }} />
+                      </details>
                     )}
 
                     {/* Challenges */}
                     {selectedProject.challenges && (
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2">
+                      <details open className="group space-y-3 cursor-pointer">
+                        <summary className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2 list-none marker:hidden">
                           <HelpCircle className="w-4 h-4" /> [ ANOMALIES_RESOLVED ]
-                        </h4>
-                        <div className="text-[#80deea] text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedProject.challenges }} />
-                      </div>
+                          <span className="ml-auto group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <div className="text-[#80deea] text-sm leading-relaxed pt-2 cursor-auto" dangerouslySetInnerHTML={{ __html: selectedProject.challenges }} />
+                      </details>
                     )}
                   </div>
 
@@ -371,30 +377,55 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
                       </div>
                     )}
 
-                    {/* Image gallery strip list */}
-                    {selectedProject.gallery_urls.length > 0 && (
-                      <div className="space-y-3">
-                        <span className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2">
-                          [ LOG_ARCHIVE_IMAGES ]
-                        </span>
-                        <div className="grid grid-cols-2 gap-3">
-                          {selectedProject.gallery_urls.map((url, idx) => (
-                            <div
-                              key={idx}
-                              onClick={() => window.open(url, '_blank')}
-                              className="relative aspect-video rounded overflow-hidden border border-[#00e5ff]/30 bg-[#000d1a] cursor-zoom-in group"
-                            >
-                              <img src={url} alt={`Gallery slide ${idx}`} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
-                              <div className="absolute inset-0 border border-transparent group-hover:border-[#00e5ff] transition-all" />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
+
+                {/* Image gallery horizontal scroll / marquee */}
+                {selectedProject.gallery_urls.length > 0 && (
+                  <div className="px-6 md:px-10 pb-10 mt-6">
+                    <span className="text-xs font-bold font-mono text-[#00e5ff] uppercase tracking-widest flex items-center gap-2 border-b border-[#00e5ff]/20 pb-2 mb-6">
+                      [ LOG_ARCHIVE_IMAGES ]
+                    </span>
+                    <div className="w-full overflow-x-auto no-scrollbar pb-4 flex gap-4 snap-x">
+                      {selectedProject.gallery_urls.map((url, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => setFullscreenImage(url)}
+                          className="relative h-48 md:h-64 shrink-0 rounded overflow-hidden border border-[#00e5ff]/30 bg-[#000d1a] cursor-zoom-in group snap-center"
+                        >
+                          <img src={url} alt={`Gallery slide ${idx}`} className="h-full w-auto object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                          <div className="absolute inset-0 border border-transparent group-hover:border-[#00e5ff] transition-all" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen Image Lightbox */}
+      <AnimatePresence>
+        {fullscreenImage && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/95 cursor-zoom-out" onClick={() => setFullscreenImage(null)} />
+            <button
+              onClick={() => setFullscreenImage(null)}
+              className="absolute top-6 right-6 bg-[#000d1a] hover:bg-[#ff003c]/20 text-[#00e5ff] hover:text-[#ff003c] p-3 border border-[#00e5ff]/40 hover:border-[#ff003c] shadow-[0_0_15px_rgba(0,229,255,0.2)] z-[310] cursor-pointer transition-all"
+              style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 80%, 80% 100%, 0 100%, 0 20%)' }}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <motion.img
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9, transition: { duration: 0 } }}
+              src={fullscreenImage}
+              alt="Fullscreen View"
+              className="relative max-w-full max-h-[90vh] object-contain z-[305] rounded border border-[#00e5ff]/20 shadow-[0_0_50px_rgba(0,229,255,0.15)]"
+            />
           </div>
         )}
       </AnimatePresence>
