@@ -12,7 +12,7 @@ export interface ModalProps {
   title?: string;
   description?: string;
   children: React.ReactNode;
-  maxWidth?: string; // e.g., max-w-md, max-w-lg
+  maxWidth?: string;
 }
 
 export const Modal = ({
@@ -35,12 +35,12 @@ export const Modal = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 z-[200] bg-black/40 backdrop-blur-md"
+                className="fixed inset-0 z-[200] bg-black/50 backdrop-blur-md"
               />
             </DialogPrimitive.Overlay>
 
-            {/* Container */}
-            <div className="fixed inset-0 z-[201] flex items-center justify-center p-4 overflow-y-auto">
+            {/* Centered container — just for positioning */}
+            <div className="fixed inset-0 z-[201] flex items-center justify-center p-4">
               <DialogPrimitive.Content asChild>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 16 }}
@@ -48,29 +48,42 @@ export const Modal = ({
                   exit={{ opacity: 0, scale: 0.95, y: 16 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 26 }}
                   className={cn(
-                    'w-full bg-[#001a33] rounded-3xl p-8 relative shadow-float focus:outline-none overflow-hidden my-8',
+                    'w-full bg-[#001a33] rounded-3xl relative shadow-float focus:outline-none',
+                    'flex flex-col',
+                    // Card is max 90% of viewport height — content scrolls inside
+                    'max-h-[90vh]',
                     maxWidth
                   )}
                 >
-                  {/* Close button */}
-                  <DialogPrimitive.Close className="absolute top-4 right-4 text-text-tertiary hover:text-text-primary p-2 rounded-full hover:bg-border-subtle transition-colors focus:outline-none cursor-pointer">
-                    <X className="w-5 h-5" />
-                    <span className="sr-only">Close</span>
-                  </DialogPrimitive.Close>
+                  {/* ── Sticky Header ── */}
+                  <div className="shrink-0 flex items-start justify-between px-8 pt-7 pb-3 border-b border-white/5">
+                    <div>
+                      {title && (
+                        <DialogPrimitive.Title className="text-2xl font-bold font-display text-text-primary">
+                          {title}
+                        </DialogPrimitive.Title>
+                      )}
+                      {description && (
+                        <DialogPrimitive.Description className="text-sm text-text-tertiary mt-1 leading-relaxed">
+                          {description}
+                        </DialogPrimitive.Description>
+                      )}
+                    </div>
+                    <DialogPrimitive.Close
+                      className="ml-4 mt-1 shrink-0 text-text-tertiary hover:text-text-primary p-2 rounded-full hover:bg-border-subtle transition-colors focus:outline-none cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                      <span className="sr-only">Close</span>
+                    </DialogPrimitive.Close>
+                  </div>
 
-                  {title && (
-                    <DialogPrimitive.Title className="text-2xl font-bold font-display text-text-primary mb-1">
-                      {title}
-                    </DialogPrimitive.Title>
-                  )}
-
-                  {description && (
-                    <DialogPrimitive.Description className="text-sm text-text-tertiary mb-6 leading-relaxed">
-                      {description}
-                    </DialogPrimitive.Description>
-                  )}
-
-                  <div className="mt-2">{children}</div>
+                  {/* ── Scrollable Body ── */}
+                  <div
+                    className="flex-1 min-h-0 overflow-y-auto px-8 py-6"
+                    style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+                  >
+                    {children}
+                  </div>
                 </motion.div>
               </DialogPrimitive.Content>
             </div>

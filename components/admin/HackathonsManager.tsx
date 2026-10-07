@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { supabase } from '@/lib/supabase/client';
 import { Hackathon } from '@/types';
 import toast from '@/components/ui/toast';
-import { Plus, GripVertical, Edit2, Trash2, Trophy, ExternalLink, GitBranch, Globe } from 'lucide-react';
+import { Plus, GripVertical, Edit2, Trash2, Trophy, ExternalLink, GitBranch, Globe, Image as ImageIcon, X } from 'lucide-react';
 import Button from '../ui/button';
 import Input from '../ui/input';
 import Modal from '../ui/modal';
@@ -62,13 +62,17 @@ const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
         >
           <GripVertical className="w-4 h-4" />
         </button>
-        <div className="w-10 h-10 rounded-lg border border-border-subtle bg-purple-50 flex items-center justify-center shrink-0">
-          <Trophy className="w-5 h-5 text-purple-500" />
-        </div>
+        {hack.thumbnail_url ? (
+          <img src={hack.thumbnail_url} alt={hack.title} className="w-10 h-10 rounded-lg object-cover border border-border-subtle shrink-0" />
+        ) : (
+          <div className="w-10 h-10 rounded-lg border border-border-subtle bg-purple-50 flex items-center justify-center shrink-0">
+            <Trophy className="w-5 h-5 text-purple-500" />
+          </div>
+        )}
         <div className="overflow-hidden">
           <h4 className="text-sm font-semibold text-text-primary truncate">{hack.title}</h4>
           <p className="text-[11px] text-text-tertiary">
-            {hack.organization} • {hack.date}
+            {hack.project_name ? `${hack.project_name} · ` : ''}{hack.organization} • {hack.date}
           </p>
         </div>
       </div>
@@ -110,11 +114,26 @@ const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
   );
 };
 
+// Gallery image component
+const GalleryImageItem = ({ url, onRemove }: { url: string; onRemove: () => void }) => (
+  <div className="relative group rounded-lg overflow-hidden border border-border-subtle aspect-video bg-bg-primary">
+    <img src={url} alt="Gallery" className="w-full h-full object-cover" />
+    <button
+      type="button"
+      onClick={onRemove}
+      className="absolute top-1 right-1 p-1 bg-black/70 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+    >
+      <X className="w-3 h-3" />
+    </button>
+  </div>
+);
+
 export const HackathonsManager = () => {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteHack, setDeleteHack] = useState<Hackathon | null>(null);
   const [editingHack, setEditingHack] = useState<Hackathon | null>(null);
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
 
   const { data: hackathons = [], isLoading } = useQuery<Hackathon[]>({
     queryKey: ['admin-hackathons'],
@@ -133,13 +152,18 @@ export const HackathonsManager = () => {
       title: '',
       organization: '',
       date: '',
+      project_name: '',
+      description: '',
       project_url: '',
       github_url: '',
       certificate_url: '',
+      thumbnail_url: '',
+      gallery_urls: [],
     },
   });
 
   const watchCertUrl = watch('certificate_url');
+  const watchThumbUrl = watch('thumbnail_url');
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -148,6 +172,7 @@ export const HackathonsManager = () => {
       const isNew = !editingHack;
       const payload = {
         ...formData,
+        gallery_urls: galleryUrls,
         display_order: editingHack?.display_order ?? hackathons.length,
         ...(editingHack ? { id: editingHack.id } : {}),
       };
@@ -168,7 +193,8 @@ export const HackathonsManager = () => {
       queryClient.invalidateQueries({ queryKey: ['admin-hackathons'] });
       setModalOpen(false);
       setEditingHack(null);
-      reset({ title: '', organization: '', date: '', project_url: '', github_url: '', certificate_url: '' });
+      setGalleryUrls([]);
+      reset({ title: '', organization: '', date: '', project_name: '', description: '', project_url: '', github_url: '', certificate_url: '', thumbnail_url: '', gallery_urls: [] });
       toast.success('Hackathon saved successfully');
     },
     onError: (err: any) => {
@@ -224,13 +250,15 @@ export const HackathonsManager = () => {
 
   const handleEditClick = (hack: Hackathon) => {
     setEditingHack(hack);
+    setGalleryUrls(hack.gallery_urls || []);
     reset(hack);
     setModalOpen(true);
   };
 
   const handleAddClick = () => {
     setEditingHack(null);
-    reset({ title: '', organization: '', date: '', project_url: '', github_url: '', certificate_url: '' });
+    setGalleryUrls([]);
+    reset({ title: '', organization: '', date: '', project_name: '', description: '', project_url: '', github_url: '', certificate_url: '', thumbnail_url: '', gallery_urls: [] });
     setModalOpen(true);
   };
 
@@ -243,7 +271,7 @@ export const HackathonsManager = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold font-display text-text-primary">Hackathons</h2>
-          <p className="text-xs text-text-tertiary">Add hackathon achievements with links to certificates, projects and GitHub</p>
+          <p className="text-xs text-text-tertiary">Add hackathon achievements with certificate, project details, links, and gallery images</p>
         </div>
         <Button onClick={handleAddClick} size="sm" className="flex items-center gap-1.5">
           <Plus className="w-4 h-4" /> Add Hackathon
@@ -276,42 +304,113 @@ export const HackathonsManager = () => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title={editingHack ? 'Edit Hackathon' : 'Add New Hackathon'}
+        maxWidth="max-w-2xl"
       >
-        <form onSubmit={handleSubmit((data) => saveMutation.mutate(data))} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-text-secondary">Hackathon / Award Title</label>
-            <Input {...register('title', { required: true })} placeholder="e.g. 1st Place — Smart India Hackathon 2024" />
+        <form onSubmit={handleSubmit((data) => saveMutation.mutate(data))} className="space-y-5">
+          
+          {/* ── SECTION 1: Certificate ── */}
+          <div className="pb-3 border-b border-border-subtle">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent-primary mb-3">① Certificate</p>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-text-secondary">Certificate Image (shown on card front)</label>
+              <FileUpload
+                folder="hackathons/certs"
+                accept="image/*"
+                value={watchCertUrl}
+                onUploadComplete={(url) => setValue('certificate_url', url)}
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* ── SECTION 2: Hackathon Info ── */}
+          <div className="pb-3 border-b border-border-subtle space-y-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent-primary">② Hackathon Info</p>
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Organization / Host</label>
-              <Input {...register('organization', { required: true })} placeholder="e.g. IIT Bombay" />
+              <label className="text-xs font-semibold text-text-secondary">Hackathon / Award Title *</label>
+              <Input {...register('title', { required: true })} placeholder="e.g. 1st Place — Smart India Hackathon 2024" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-text-secondary">Organization / Host *</label>
+                <Input {...register('organization', { required: true })} placeholder="e.g. IIT Bombay" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-text-secondary">Date *</label>
+                <Input {...register('date', { required: true })} placeholder="e.g. Dec 2024" />
+              </div>
+            </div>
+          </div>
+
+          {/* ── SECTION 3: Project Details ── */}
+          <div className="pb-3 border-b border-border-subtle space-y-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent-primary">③ Project Details</p>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-text-secondary">Project Name</label>
+              <Input {...register('project_name')} placeholder="e.g. EcoTrack — Carbon Footprint Monitor" />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-text-secondary">Date</label>
-              <Input {...register('date', { required: true })} placeholder="e.g. Dec 2024" />
+              <label className="text-xs font-semibold text-text-secondary">Project Description / Problem it Solves</label>
+              <textarea
+                {...register('description')}
+                placeholder="Describe what the project does and the problem it solves..."
+                rows={4}
+                className="w-full px-3 py-2 rounded-lg border border-border-default bg-bg-primary text-text-primary text-sm placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/40 resize-none"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-text-secondary">Project Thumbnail / Main Photo</label>
+              <FileUpload
+                folder="hackathons/thumbnails"
+                accept="image/*"
+                value={watchThumbUrl}
+                onUploadComplete={(url) => setValue('thumbnail_url', url)}
+              />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-text-secondary">Hackathon Certificate Image</label>
-            <FileUpload
-              folder="hackathons/certs"
-              accept="image/*"
-              value={watchCertUrl}
-              onUploadComplete={(url) => setValue('certificate_url', url)}
-            />
+          {/* ── SECTION 4: Links ── */}
+          <div className="pb-3 border-b border-border-subtle space-y-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent-primary">④ Links</p>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5" /> Live / Deployed URL
+              </label>
+              <Input {...register('project_url')} placeholder="https://my-hackathon-project.vercel.app" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
+                <GitBranch className="w-3.5 h-3.5" /> GitHub Repository URL
+              </label>
+              <Input {...register('github_url')} placeholder="https://github.com/username/repo" />
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-text-secondary">Live Project URL</label>
-            <Input {...register('project_url')} placeholder="https://my-hackathon-project.vercel.app" />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-text-secondary">GitHub Repository URL</label>
-            <Input {...register('github_url')} placeholder="https://github.com/username/repo" />
+          {/* ── SECTION 5: Gallery ── */}
+          <div className="space-y-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent-primary">⑤ Project Gallery</p>
+            {galleryUrls.length > 0 && (
+              <div className="grid grid-cols-3 gap-3">
+                {galleryUrls.map((url, idx) => (
+                  <GalleryImageItem
+                    key={idx}
+                    url={url}
+                    onRemove={() => setGalleryUrls((prev) => prev.filter((_, i) => i !== idx))}
+                  />
+                ))}
+              </div>
+            )}
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
+                <ImageIcon className="w-3.5 h-3.5" /> Add Gallery Image
+              </label>
+              <FileUpload
+                folder="hackathons/gallery"
+                accept="image/*"
+                value=""
+                onUploadComplete={(url) => setGalleryUrls((prev) => [...prev, url])}
+              />
+              <p className="text-[10px] text-text-tertiary">Upload multiple images one by one. They will appear in a gallery inside the details panel.</p>
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-border-subtle">

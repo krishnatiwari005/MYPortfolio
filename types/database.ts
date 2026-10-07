@@ -111,9 +111,13 @@ export interface Hackathon {
   title: string;
   organization: string;
   date: string;
+  project_name: string | null;
+  description: string | null;
   project_url: string | null;
   github_url: string | null;
   certificate_url: string | null;
+  thumbnail_url: string | null;
+  gallery_urls: string[];
   display_order: number;
   created_at: string;
   updated_at: string;
