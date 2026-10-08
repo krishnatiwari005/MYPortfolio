@@ -59,11 +59,13 @@ export const Footer = ({ hero, settings, isAdmin, onTogglePanel, onOpenLogin }: 
               <span>Last updated: {formatDate(settings.last_updated_at)}</span>
             )}
           </p>
-          <LockButton
-            isAdmin={isAdmin}
-            onTogglePanel={onTogglePanel}
-            onOpenLogin={onOpenLogin}
-          />
+          <span className="hidden md:inline-flex">
+            <LockButton
+              isAdmin={isAdmin}
+              onTogglePanel={onTogglePanel}
+              onOpenLogin={onOpenLogin}
+            />
+          </span>
         </div>
       </div>
     </footer>

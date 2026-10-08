@@ -107,7 +107,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-3 bottom-20 sm:absolute sm:inset-auto sm:bottom-16 sm:right-0 w-auto sm:w-[400px] h-[72vh] sm:h-[500px] max-h-[580px] rounded-2xl flex flex-col overflow-hidden shadow-[0_0_40px_rgba(0,229,255,0.2),0_0_80px_rgba(6,182,212,0.1)]"
+            className="fixed inset-x-3 bottom-20 sm:absolute sm:inset-auto sm:bottom-16 sm:right-0 w-auto sm:w-[460px] h-[72vh] sm:h-[520px] max-h-[600px] rounded-2xl flex flex-col overflow-hidden shadow-[0_0_40px_rgba(0,229,255,0.2),0_0_80px_rgba(6,182,212,0.1)]"
             style={{ background: 'linear-gradient(160deg, #001f3f 0%, #000d1a 60%, #001a2e 100%)', border: '1px solid rgba(0,229,255,0.3)' }}
           >
             <div className="flex items-center justify-between px-4 py-3" style={{ background: 'linear-gradient(90deg, rgba(0,229,255,0.15), rgba(6,182,212,0.1))', borderBottom: '1px solid rgba(0,229,255,0.25)' }}>
@@ -146,7 +146,7 @@ export default function ChatBot() {
                       <img src="/krisnova-avatar.jpg" alt="KrisNova" className="w-full h-full object-cover" />
                     </div>
                   )}
-                  <div className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-3.5 py-2.5 sm:px-4 text-xs sm:text-sm ${message.role === 'user' ? 'bg-[#00e5ff] text-[#000d1a] rounded-tr-sm font-medium' : 'bg-[#001f3f] text-[#e0f7fa] border border-[#00e5ff]/20 rounded-tl-sm'}`}>
+                  <div className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-3.5 py-2.5 sm:px-4 text-xs sm:text-sm break-words overflow-wrap-anywhere ${message.role === 'user' ? 'bg-[#00e5ff] text-[#000d1a] rounded-tr-sm font-medium' : 'bg-[#001f3f] text-[#e0f7fa] border border-[#00e5ff]/20 rounded-tl-sm'}`} style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                     {message.role === 'assistant' ? (
                       <ReactMarkdown
                         components={{
@@ -159,6 +159,16 @@ export default function ChatBot() {
                           h1: ({ children }) => <h1 className="font-bold text-[#00e5ff] mb-1">{children}</h1>,
                           h2: ({ children }) => <h2 className="font-semibold text-[#00e5ff] mb-1">{children}</h2>,
                           h3: ({ children }) => <h3 className="font-medium text-[#80deea] mb-0.5">{children}</h3>,
+                          a: ({ href, children }) => (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#00e5ff] underline underline-offset-2 decoration-[#00e5ff]/40 hover:decoration-[#00e5ff] hover:text-white transition-colors break-all"
+                            >
+                              {children}
+                            </a>
+                          ),
                         }}
                       >
                         {message.content}
