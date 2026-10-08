@@ -7,6 +7,7 @@ import QueryProvider from '@/components/shared/QueryProvider';
 import { Toaster } from 'react-hot-toast';
 import { getSeoSettings, getHero } from '@/lib/supabase/queries';
 import AnimatedBackground from '@/components/portfolio/AnimatedBackground';
+import ChatBot from '@/components/ui/ChatBot';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -74,6 +75,7 @@ export default function RootLayout({
               duration: 4000,
             }}
           />
+          <ChatBot />
         </QueryProvider>
       </body>
     </html>
