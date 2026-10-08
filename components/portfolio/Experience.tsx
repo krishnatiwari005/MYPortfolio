@@ -271,7 +271,14 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                         </span>
                       </div>
 
-                      <div className="p-6 md:p-8 rounded-xl relative overflow-hidden group border-2 border-[#00e5ff]/30 bg-[#000d1a]/95 backdrop-blur-lg shadow-[0_0_25px_rgba(0,229,255,0.15)] hover:border-[#00e5ff]/60 hover:shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all ml-12 md:ml-0 z-10">
+                      <div className="p-6 md:p-8 rounded-xl md:rounded-none relative overflow-hidden group border-2 border-[#00e5ff]/30 bg-[#000d1a]/95 backdrop-blur-lg shadow-[0_0_25px_rgba(0,229,255,0.15)] hover:border-[#00e5ff]/60 hover:shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all ml-12 md:ml-0 z-10"
+                        style={{ clipPath: 'none' }}
+                      >
+                        {/* Desktop HUD corner accents */}
+                        <span className="hidden md:block absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#00e5ff]/70 group-hover:border-[#00e5ff] transition-colors z-20" />
+                        <span className="hidden md:block absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#00e5ff]/70 group-hover:border-[#00e5ff] transition-colors z-20" />
+                        <span className="hidden md:block absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#00e5ff]/70 group-hover:border-[#00e5ff] transition-colors z-20" />
+                        <span className="hidden md:block absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#00e5ff]/70 group-hover:border-[#00e5ff] transition-colors z-20" />
                         {/* Scanline */}
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/10 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
                         
@@ -345,7 +352,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                               <button
                                 type="button"
                                 onClick={() => setActiveModal({ exp, type: 'certificate' })}
-                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00ff88] hover:text-white hover:bg-[#00ff88]/20 px-3 py-1.5 rounded border border-[#00ff88]/30 transition-colors"
+                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00ff88] hover:text-white hover:bg-[#00ff88]/20 px-3 py-1.5 border border-[#00ff88]/30 transition-colors"
                               >
                                 <Award className="w-3.5 h-3.5" />
                                 <span>Verify Certificate</span>
@@ -357,7 +364,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                               <button
                                 type="button"
                                 onClick={() => setActiveModal({ exp, type: 'document' })}
-                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00e5ff] hover:text-white hover:bg-[#00e5ff]/20 px-3 py-1.5 rounded border border-[#00e5ff]/30 transition-colors"
+                                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00e5ff] hover:text-white hover:bg-[#00e5ff]/20 px-3 py-1.5 border border-[#00e5ff]/30 transition-colors"
                               >
                                 <ShieldCheck className="w-3.5 h-3.5" />
                                 <span>View Document</span>

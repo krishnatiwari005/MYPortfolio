@@ -32,7 +32,7 @@ export const AboutSection = ({ data }: AboutSectionProps) => {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
           style={{ transformOrigin: 'top', perspective: 2000 }}
-          className="relative glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-12 overflow-hidden border border-[rgba(0,229,255,0.15)] shadow-[0_0_40px_rgba(0,229,255,0.05)]"
+          className="relative glass-card rounded-xl sm:rounded-2xl md:rounded-none p-5 sm:p-8 md:p-12 overflow-hidden border border-[rgba(0,229,255,0.15)] shadow-[0_0_40px_rgba(0,229,255,0.05)]"
         >
           {/* Cyberpunk accents */}
           <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent opacity-50" />
@@ -108,13 +108,17 @@ export const AboutSection = ({ data }: AboutSectionProps) => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 + idx * 0.1, duration: 0.5 }}
-                    className="flex items-center gap-4 p-4 rounded-xl bg-[#000d1a]/60 border border-[rgba(0,229,255,0.1)] hover:border-[rgba(0,229,255,0.3)] hover:shadow-[0_0_20px_rgba(0,229,255,0.1)] transition-all group"
+                    className="relative flex items-center gap-4 p-4 bg-[#000d1a]/80 border border-[rgba(0,229,255,0.15)] hover:border-[rgba(0,229,255,0.4)] hover:shadow-[0_0_24px_rgba(0,229,255,0.15)] transition-all group"
+                    style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
                   >
-                    <div className="p-3 bg-[rgba(0,229,255,0.05)] text-[#00e5ff] rounded-lg group-hover:scale-110 group-hover:bg-[rgba(0,229,255,0.15)] transition-all">
+                    {/* HUD corner accents */}
+                    <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#00e5ff]/60 group-hover:border-[#00e5ff] transition-colors" />
+                    <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#00e5ff]/60 group-hover:border-[#00e5ff] transition-colors" />
+                    <div className="p-3 bg-[rgba(0,229,255,0.07)] text-[#00e5ff] group-hover:scale-110 group-hover:bg-[rgba(0,229,255,0.15)] transition-all shrink-0">
                       <Icon className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-bold text-[#00b4d8] uppercase tracking-widest mb-0.5">{item.label}</p>
+                      <p className="text-[9px] font-bold text-[#00b4d8] uppercase tracking-widest mb-0.5 font-mono">{item.label}</p>
                       <h4 className="text-sm md:text-base font-semibold text-[#e0f7fa] leading-tight">{item.value}</h4>
                     </div>
                   </motion.div>
