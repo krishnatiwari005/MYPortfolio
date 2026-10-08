@@ -16,6 +16,7 @@ import CertificatesSection from './Certificates';
 import ResumeSection from './ResumeSection';
 import ContactSection from './Contact';
 import Footer from './Footer';
+import WelcomeScreen from './WelcomeScreen';
 
 // Admin / Auth Portals
 
@@ -51,6 +52,7 @@ export default function PortfolioClient({
   const { isAdmin, loading, logout } = useAdminAuth();
   const [panelOpen, setPanelOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   // Close the admin panel immediately if the user loses auth (e.g. session expires)
   useEffect(() => {
@@ -83,8 +85,18 @@ export default function PortfolioClient({
     : 'JD';
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Geometric Modern Background */}
+    <>
+      <AnimatePresence>
+        {showWelcome && (
+          <WelcomeScreen
+            name={hero?.name || 'Portfolio'}
+            onComplete={() => setShowWelcome(false)}
+          />
+        )}
+      </AnimatePresence>
+      
+      <div className="relative min-h-screen overflow-hidden">
+        {/* Geometric Modern Background */}
       <GeometricBackground />
 
       {/* Floating Navigation Header */}
@@ -142,5 +154,6 @@ export default function PortfolioClient({
         />
       )}
     </div>
+    </>
   );
 }
