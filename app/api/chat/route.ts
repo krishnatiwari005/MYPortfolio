@@ -6,7 +6,6 @@ import { NextResponse } from 'next/server';
 const groq = createOpenAI({
   apiKey: process.env.GROK_API_KEY || '',
   baseURL: 'https://api.groq.com/openai/v1',
-  compatibility: 'compatible',
 });
 
 export async function POST(req: Request) {
