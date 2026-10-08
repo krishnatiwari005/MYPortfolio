@@ -100,10 +100,10 @@ export const Contributions = ({ hero }: ContributionsProps) => {
               <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-[#00e5ff]/60 group-hover:border-[#00e5ff] transition-all z-20" />
 
               <div className="p-8 md:p-10 rounded-2xl border border-[#00e5ff]/20 bg-[#001a33]/80 backdrop-blur-md shadow-[0_0_30px_rgba(0,229,255,0.1)] flex flex-col items-center group-hover:border-[#00e5ff]/40 transition-all">
-                <div className="flex items-center gap-3 mb-8 w-full justify-between border-b border-[#00e5ff]/10 pb-4">
+                <div className="flex flex-wrap items-center gap-3 gap-y-2 mb-8 w-full justify-between border-b border-[#00e5ff]/10 pb-4">
                   <div className="flex items-center gap-3">
                     <Terminal className="w-5 h-5 text-[#00ff88]" />
-                    <h3 className="text-[12px] font-bold font-mono text-[#00ff88] uppercase tracking-widest">
+                    <h3 className="text-[10px] sm:text-[12px] font-bold font-mono text-[#00ff88] uppercase tracking-widest break-words">
                       [MODULE: GITHUB_CONTRIBUTIONS]
                     </h3>
                   </div>
@@ -153,10 +153,10 @@ export const Contributions = ({ hero }: ContributionsProps) => {
               <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-[#ff00ff]/60 group-hover:border-[#ff00ff] transition-all z-20" />
 
               <div className="p-8 md:p-10 rounded-2xl border border-[#ff00ff]/20 bg-[#001a33]/80 backdrop-blur-md shadow-[0_0_30px_rgba(255,0,255,0.08)] flex flex-col items-center group-hover:border-[#ff00ff]/40 transition-all">
-                <div className="flex items-center gap-3 mb-8 w-full justify-between border-b border-[#ff00ff]/10 pb-4">
+                <div className="flex flex-wrap items-center gap-3 gap-y-2 mb-8 w-full justify-between border-b border-[#ff00ff]/10 pb-4">
                   <div className="flex items-center gap-3">
                     <Terminal className="w-5 h-5 text-[#ff00ff]" />
-                    <h3 className="text-[12px] font-bold font-mono text-[#ff00ff] uppercase tracking-widest">
+                    <h3 className="text-[10px] sm:text-[12px] font-bold font-mono text-[#ff00ff] uppercase tracking-widest break-words">
                       [MODULE: LEETCODE_CONSISTENCY]
                     </h3>
                   </div>
