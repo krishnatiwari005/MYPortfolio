@@ -34,10 +34,10 @@ export const Contributions = ({ hero }: ContributionsProps) => {
   }
 
   return (
-    <section className="py-16 md:py-24 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[1200px] mx-auto px-6 md:px-12">
+    <section className="py-10 md:py-24 relative z-10 scroll-mt-12">
+      <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center space-y-4 mb-16">
+        <div className="flex flex-col items-center text-center space-y-4 mb-10 md:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[rgba(0,229,255,0.05)] border border-[rgba(0,229,255,0.2)] text-[#00e5ff] text-xs font-bold tracking-widest uppercase rounded-full shadow-[0_0_15px_rgba(0,229,255,0.1)]">
             <Activity className="w-3.5 h-3.5" />
             Continuous Learning

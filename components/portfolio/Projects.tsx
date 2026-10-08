@@ -42,8 +42,8 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   }, [selectedProject]);
 
   return (
-    <section id="projects" className={`py-12 md:py-20 relative scroll-mt-12 ${selectedProject ? 'z-[999]' : 'z-10'}`}>
-      <div className="w-full max-w-[1200px] mx-auto px-6 md:px-12 space-y-12">
+    <section id="projects" className={`py-10 md:py-20 relative scroll-mt-12 ${selectedProject ? 'z-[999]' : 'z-10'}`}>
+      <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12 space-y-10 md:space-y-12">
         
         {/* Section Header */}
         <div className="flex flex-col items-center text-center space-y-4">

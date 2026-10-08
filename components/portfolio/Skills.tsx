@@ -1,5 +1,5 @@
 'use client';
-// Cache-bust comment: cyberpunk-skills-v4
+// Cache-bust comment: cyberpunk-skills-v5-mobile-points
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skill } from '@/types';
@@ -30,6 +30,7 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
         return 'text-[#ffea00] bg-[#ffea00]/10 border-[#ffea00]/30'; // Neon Yellow
       case 'management':
       case 'ai/ml':
+      case 'ai':
         return 'text-[#00e5ff] bg-[#00e5ff]/10 border-[#00e5ff]/30'; // Neon Cyan
       default:
         return 'text-[#00b4d8] bg-[#00b4d8]/10 border-[#00b4d8]/30';
@@ -37,8 +38,8 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
   };
 
   return (
-    <section id="skills" className="py-12 md:py-20 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 space-y-16">
+    <section id="skills" className="py-10 md:py-20 relative z-10 scroll-mt-12">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 space-y-12 md:space-y-16">
         
         {/* Top Header */}
         <div className="flex flex-col items-center text-center space-y-4 relative">
@@ -57,16 +58,54 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
         </div>
 
         {/* Side-by-Side Container */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-8 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 xl:gap-8 items-start">
           
           {/* Left Side: Core Skills */}
-          <div className="space-y-8 flex flex-col">
+          <div className="space-y-6 sm:space-y-8 flex flex-col">
             <div className="flex items-center gap-3 border-b border-[#00e5ff]/30 pb-4">
               <Zap className="w-6 h-6 text-[#00e5ff]" />
-              <h3 className="text-2xl font-bold font-display text-[#e0f7fa] tracking-wide">Core Domains</h3>
+              <h3 className="text-xl sm:text-2xl font-bold font-display text-[#e0f7fa] tracking-wide">Core Domains</h3>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
+            {/* MOBILE ONLY: Points View (md:hidden) */}
+            <div className="md:hidden space-y-2">
+              {coreSkills.length === 0 && (
+                <div className="py-4 text-center text-[#00b4d8]/60 font-mono text-xs">
+                  No Core Domains configured.
+                </div>
+              )}
+              {coreSkills.map((skill) => {
+                const cleanCat = skill.category.replace('CORE:', '');
+                return (
+                  <div
+                    key={skill.id}
+                    className="flex items-center justify-between py-2.5 px-3.5 rounded-xl bg-[#001020]/80 border border-[rgba(0,229,255,0.16)] backdrop-blur-sm shadow-sm"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] shrink-0" />
+                      {skill.logo_url ? (
+                        <img src={skill.logo_url} alt="" className="w-4 h-4 object-contain shrink-0" />
+                      ) : (
+                        <Cpu className="w-3.5 h-3.5 text-[#00b4d8] shrink-0" />
+                      )}
+                      <span className="text-xs sm:text-sm font-bold text-[#e0f7fa] truncate">{skill.name}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-[8px] font-bold px-1.5 py-0.5 border rounded uppercase tracking-wider ${getCategoryColor(cleanCat)}`}>
+                        {cleanCat}
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-[#00e5ff] min-w-[28px] text-right">
+                        {skill.proficiency}%
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* DESKTOP ONLY: 3D Boxed Grid (hidden md:grid - UNCHANGED) */}
+            <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
               {coreSkills.length === 0 && (
                 <div className="col-span-1 sm:col-span-2 py-8 text-center text-[#00b4d8]/60 font-mono text-xs">
                   No Core Domains configured. Add them in the Skills Manager.
@@ -138,13 +177,46 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
           </div>
 
           {/* Right Side: Tech Stack */}
-          <div className="space-y-8 flex flex-col">
+          <div className="space-y-6 sm:space-y-8 flex flex-col">
             <div className="flex items-center gap-3 border-b border-[#00e5ff]/30 pb-4">
               <Code2 className="w-6 h-6 text-[#00e5ff]" />
-              <h3 className="text-2xl font-bold font-display text-[#e0f7fa] tracking-wide">Tech Stack Nodes</h3>
+              <h3 className="text-xl sm:text-2xl font-bold font-display text-[#e0f7fa] tracking-wide">Tech Stack Nodes</h3>
             </div>
             
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
+            {/* MOBILE ONLY: Points View (md:hidden) */}
+            <div className="md:hidden space-y-2">
+              {techSkills.map((skill) => {
+                const cleanCat = skill.category.replace('TECH:', '');
+                return (
+                  <div
+                    key={skill.id}
+                    className="flex items-center justify-between py-2.5 px-3.5 rounded-xl bg-[#001020]/80 border border-[rgba(0,229,255,0.16)] backdrop-blur-sm shadow-sm"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] shrink-0" />
+                      {skill.logo_url ? (
+                        <img src={skill.logo_url} alt="" className="w-4 h-4 object-contain shrink-0" />
+                      ) : (
+                        <Globe className="w-3.5 h-3.5 text-[#00b4d8] shrink-0" />
+                      )}
+                      <span className="text-xs sm:text-sm font-bold text-[#e0f7fa] truncate">{skill.name}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-[8px] font-bold px-1.5 py-0.5 border rounded uppercase tracking-wider ${getCategoryColor(cleanCat)}`}>
+                        {cleanCat}
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-[#00e5ff] min-w-[28px] text-right">
+                        {skill.proficiency}%
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* DESKTOP ONLY: 3D Boxed Grid (hidden md:grid - UNCHANGED) */}
+            <motion.div layout className="hidden md:grid grid-cols-1 sm:grid-cols-2 gap-6 relative items-start content-start">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#00e5ff]/5 blur-[120px] rounded-full pointer-events-none" />
 
               <AnimatePresence mode="popLayout">
@@ -223,4 +295,3 @@ export const SkillsSection = ({ skills }: SkillsSectionProps) => {
 };
 
 export default SkillsSection;
-

@@ -195,8 +195,8 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
   return (
     <>
-      <section id="experience" className="py-12 md:py-20 relative z-10 scroll-mt-12">
-        <div className="w-full max-w-[1100px] mx-auto px-6 md:px-12 space-y-12">
+      <section id="experience" className="py-10 md:py-20 relative z-10 scroll-mt-12">
+        <div className="w-full max-w-[1100px] mx-auto px-4 sm:px-6 md:px-12 space-y-10 md:space-y-12">
           {/* Section Header */}
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[rgba(0,229,255,0.05)] border border-[rgba(0,229,255,0.2)] text-[#00e5ff] text-xs font-bold tracking-widest uppercase rounded-full shadow-[0_0_15px_rgba(0,229,255,0.1)]">

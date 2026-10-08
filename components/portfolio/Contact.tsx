@@ -76,8 +76,8 @@ export const ContactSection = ({ data }: ContactSectionProps) => {
   };
 
   return (
-    <section id="contact" className="py-12 md:py-20 relative z-10 scroll-mt-12">
-      <div className="w-full max-w-[800px] mx-auto px-6 md:px-12">
+    <section id="contact" className="py-10 md:py-20 relative z-10 scroll-mt-12">
+      <div className="w-full max-w-[800px] mx-auto px-4 sm:px-6 md:px-12">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center space-y-4 mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[rgba(0,229,255,0.12)] border border-[rgba(0,229,255,0.4)] text-[#00e5ff] text-xs font-bold tracking-widest uppercase rounded-full shadow-[0_0_15px_rgba(0,229,255,0.25)]">
@@ -105,7 +105,7 @@ export const ContactSection = ({ data }: ContactSectionProps) => {
           <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-[#00e5ff] group-hover:shadow-[0_0_10px_#00e5ff] transition-all z-10" />
           <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#00e5ff] group-hover:shadow-[0_0_10px_#00e5ff] transition-all z-10" />
 
-          <Card glass className="p-6 md:p-10 rounded-2xl flex flex-col space-y-8 relative overflow-hidden bg-[#001329]/90 border border-[#00e5ff]/35 backdrop-blur-xl shadow-[0_0_35px_rgba(0,229,255,0.12)]">
+          <Card glass className="p-5 sm:p-6 md:p-10 rounded-2xl flex flex-col space-y-6 sm:space-y-8 relative overflow-hidden bg-[#001329]/90 border border-[#00e5ff]/35 backdrop-blur-xl shadow-[0_0_35px_rgba(0,229,255,0.12)]">
             
             {/* Open to opportunities status */}
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 pb-6 border-b border-[#00e5ff]/25">
