@@ -29,15 +29,7 @@ export default function GeometricBackground() {
       />
 
       {/* Subtle corner sparkle decorations */}
-      <motion.div
-        className="absolute top-[18%] right-[10%]"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.35, 0.15] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#00e5ff]">
-          <path d="M12 2v20m10-10H2m15.5 7.5L6.5 6.5m11 0L6.5 17.5" />
-        </svg>
-      </motion.div>
+
 
       <motion.div
         className="absolute bottom-[18%] left-[8%]"

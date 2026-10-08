@@ -70,98 +70,7 @@ export default function AnimatedBackground() {
     gridMesh.position.y = -2;
     scene.add(gridMesh);
 
-    // 2. Particle Tunnel
-    const tunnelGeometry = new THREE.BufferGeometry();
-    const tunnelGeometry2 = new THREE.BufferGeometry();
-    const tunnelPositions = new Float32Array(PARTICLE_COUNT * 3);
-    const tunnelPositions2 = new Float32Array(PARTICLE_COUNT * 3);
-    const tunnelSizes = new Float32Array(PARTICLE_COUNT);
-    const tunnelSizes2 = new Float32Array(PARTICLE_COUNT);
-    const tunnelT = new Float32Array(PARTICLE_COUNT);
-    const tunnelT2 = new Float32Array(PARTICLE_COUNT);
-    const tunnelRadius = new Float32Array(PARTICLE_COUNT);
-    const tunnelRadius2 = new Float32Array(PARTICLE_COUNT);
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      tunnelT[i] = Math.random() * Math.PI * 20 - Math.PI * 10;
-      tunnelRadius[i] = 1.5 + Math.random() * 2.0;
-      tunnelSizes[i] = 0.02 + Math.random() * 0.06;
-
-      tunnelT2[i] = Math.random() * Math.PI * 20 - Math.PI * 10;
-      tunnelRadius2[i] = 1.5 + Math.random() * 2.0;
-      tunnelSizes2[i] = 0.02 + Math.random() * 0.06;
-    }
-
-    tunnelGeometry.setAttribute('position', new THREE.BufferAttribute(tunnelPositions, 3));
-    tunnelGeometry.setAttribute('size', new THREE.BufferAttribute(tunnelSizes, 1));
-    tunnelGeometry.setAttribute('t', new THREE.BufferAttribute(tunnelT, 1));
-    tunnelGeometry.setAttribute('radius', new THREE.BufferAttribute(tunnelRadius, 1));
-
-    tunnelGeometry2.setAttribute('position', new THREE.BufferAttribute(tunnelPositions2, 3));
-    tunnelGeometry2.setAttribute('size', new THREE.BufferAttribute(tunnelSizes2, 1));
-    tunnelGeometry2.setAttribute('t', new THREE.BufferAttribute(tunnelT2, 1));
-    tunnelGeometry2.setAttribute('radius', new THREE.BufferAttribute(tunnelRadius2, 1));
-
-
-    const tunnelMaterial = new THREE.PointsMaterial({
-      color: 0x00e5ff,
-      transparent: true,
-      opacity: 0.45,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      size: 0.03
-    });
-
-    const tunnelMaterial2 = new THREE.PointsMaterial({
-      color: 0x00b4d8,
-      transparent: true,
-      opacity: 0.25,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      size: 0.02
-    });
-
-    const tunnelMesh = new THREE.Points(tunnelGeometry, tunnelMaterial);
-    const tunnelMesh2 = new THREE.Points(tunnelGeometry2, tunnelMaterial2);
-    
-    if (!prefersReducedMotion) {
-      scene.add(tunnelMesh);
-      scene.add(tunnelMesh2);
-    }
-
-    // 3. Ambient Floating Particles
-    const ambientCount = 300;
-    const ambientGeometry = new THREE.BufferGeometry();
-    const ambientPositions = new Float32Array(ambientCount * 3);
-    const ambientVelocities: { x: number; y: number; z: number; }[] = [];
-
-    for (let i = 0; i < ambientCount; i++) {
-      const r = 8 * Math.cbrt(Math.random());
-      const theta = Math.random() * 2 * Math.PI;
-      const phi = Math.acos(2 * Math.random() - 1);
-      
-      ambientPositions[i*3] = r * Math.sin(phi) * Math.cos(theta);
-      ambientPositions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-      ambientPositions[i*3+2] = r * Math.cos(phi);
-
-      ambientVelocities.push({
-        x: (Math.random() - 0.5) * 0.01,
-        y: (Math.random() - 0.5) * 0.01,
-        z: (Math.random() - 0.5) * 0.01
-      });
-    }
-
-    ambientGeometry.setAttribute('position', new THREE.BufferAttribute(ambientPositions, 3));
-    const ambientMaterial = new THREE.PointsMaterial({
-      color: 0x00ffff,
-      transparent: true,
-      opacity: 0.35,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      size: 0.02
-    });
-    const ambientMesh = new THREE.Points(ambientGeometry, ambientMaterial);
-    scene.add(ambientMesh);
+    // Removed Particle Tunnel and Ambient Floating Particles as per user request
 
     // Animation Loop
     let animationFrameId: number;
@@ -174,49 +83,7 @@ export default function AnimatedBackground() {
 
       if (!prefersReducedMotion) {
         scene.rotation.z += 0.001;
-
-        const posAttr = tunnelGeometry.attributes.position;
-        const posAttr2 = tunnelGeometry2.attributes.position;
-        
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          tunnelT[i] -= 0.02; // Move towards camera
-          if (tunnelT[i] < -10) tunnelT[i] += 20; // wrap around
-          
-          posAttr.setXYZ(i,
-            tunnelRadius[i] * Math.cos(tunnelT[i]),
-            tunnelRadius[i] * Math.sin(tunnelT[i]),
-            tunnelT[i] * 2
-          );
-
-          tunnelT2[i] -= 0.015;
-          if (tunnelT2[i] < -10) tunnelT2[i] += 20;
-          
-          posAttr2.setXYZ(i,
-            tunnelRadius2[i] * Math.cos(tunnelT2[i] + Math.PI),
-            tunnelRadius2[i] * Math.sin(tunnelT2[i] + Math.PI),
-            tunnelT2[i] * 2
-          );
-        }
-        posAttr.needsUpdate = true;
-        posAttr2.needsUpdate = true;
       }
-
-      // Update ambient particles
-      const ambPosAttr = ambientGeometry.attributes.position;
-      for (let i = 0; i < ambientCount; i++) {
-        let x = ambPosAttr.getX(i) + ambientVelocities[i].x;
-        let y = ambPosAttr.getY(i) + ambientVelocities[i].y;
-        let z = ambPosAttr.getZ(i) + ambientVelocities[i].z;
-
-        if (x*x + y*y + z*z > 64) {
-          x *= -0.99;
-          y *= -0.99;
-          z *= -0.99;
-        }
-
-        ambPosAttr.setXYZ(i, x, y, z);
-      }
-      ambPosAttr.needsUpdate = true;
 
       camera.position.x = Math.sin(time * 0.05) * 0.3;
 
@@ -241,12 +108,6 @@ export default function AnimatedBackground() {
       }
       gridGeometry.dispose();
       gridMaterial.dispose();
-      tunnelGeometry.dispose();
-      tunnelGeometry2.dispose();
-      tunnelMaterial.dispose();
-      tunnelMaterial2.dispose();
-      ambientGeometry.dispose();
-      ambientMaterial.dispose();
       renderer.dispose();
     };
   }, []);
