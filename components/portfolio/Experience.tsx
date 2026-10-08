@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // Cache-bust comment: 2026-07-06-03
 
 import React, { useState } from 'react';
@@ -97,7 +97,7 @@ const CertModal = ({ exp, viewType, onClose }: CertModalProps) => {
               </div>
               <div className="overflow-hidden">
                 <p className="text-xs font-bold text-text-primary truncate font-display">
-                  {exp.role} — {exp.company_name}
+                  {exp.role} â€” {exp.company_name}
                 </p>
                 <p className="text-[10px] text-text-tertiary">
                   {viewType === 'document' ? 'Offer Letter / Reference Document' : 'Certificate of Completion'}
@@ -302,7 +302,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                             <h3 className="text-lg md:text-xl font-bold text-[#e0f7fa] font-display">{exp.role}</h3>
                             <div className="flex flex-wrap items-center gap-2 mt-1">
                               <span className="text-sm font-semibold text-[#00b4d8]">{exp.company_name}</span>
-                              <span className="text-[9px] text-[#00ff88] font-bold tracking-widest uppercase bg-[#00ff88]/10 px-2 py-0.5 rounded border border-[#00ff88]/30">
+                              <span className="text-[9px] text-[#00ff88] font-bold tracking-widest uppercase bg-[#00ff88]/10 px-2 py-0.5 border border-[#00ff88]/30">
                                 {exp.employment_type}
                               </span>
                             </div>
@@ -359,7 +359,7 @@ export const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                               </button>
                             )}
 
-                            {/* Verify Reference Credential → opens modal with offer letter */}
+                            {/* Verify Reference Credential â†’ opens modal with offer letter */}
                             {exp.certificate_file_url && (
                               <button
                                 type="button"
