@@ -7,10 +7,11 @@ import { useForm } from 'react-hook-form';
 import { supabase } from '@/lib/supabase/client';
 import { Hackathon } from '@/types';
 import toast from '@/components/ui/toast';
-import { Plus, GripVertical, Edit2, Trash2, Trophy, ExternalLink, GitBranch, Globe, Image as ImageIcon, X } from 'lucide-react';
+import { Plus, GripVertical, Edit2, Trash2, Trophy, ExternalLink, GitBranch, Globe, Image as ImageIcon, X, Star } from 'lucide-react';
 import Button from '../ui/button';
 import Input from '../ui/input';
 import Modal from '../ui/modal';
+import Toggle from '../ui/toggle';
 import ConfirmDialog from '../ui/confirm-dialog';
 import FileUpload from '../shared/file-upload';
 import Skeleton from '../ui/skeleton';
@@ -35,9 +36,10 @@ interface HackItemProps {
   hack: Hackathon;
   onEdit: (hack: Hackathon) => void;
   onDelete: (hack: Hackathon) => void;
+  onToggleFeatured: (hack: Hackathon) => void;
 }
 
-const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
+const SortableHackItem = ({ hack, onEdit, onDelete, onToggleFeatured }: HackItemProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: hack.id });
 
   const style = {
@@ -51,7 +53,11 @@ const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center justify-between p-3.5 bg-[#001a33] border border-border-default rounded-xl hover:border-accent-primary/40 transition-colors shadow-sm"
+      className={`flex items-center justify-between p-3.5 bg-[#001a33] border rounded-xl transition-all shadow-sm ${
+        hack.is_featured
+          ? 'border-accent-primary/60 bg-gradient-to-r from-[#001a33] to-[#002b4d]/80 shadow-[0_0_15px_rgba(0,229,255,0.1)]'
+          : 'border-border-default hover:border-accent-primary/40'
+      }`}
     >
       <div className="flex items-center gap-3 overflow-hidden">
         <button
@@ -65,18 +71,37 @@ const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
         {hack.thumbnail_url ? (
           <img src={hack.thumbnail_url} alt={hack.title} className="w-10 h-10 rounded-lg object-cover border border-border-subtle shrink-0" />
         ) : (
-          <div className="w-10 h-10 rounded-lg border border-border-subtle bg-purple-50 flex items-center justify-center shrink-0">
-            <Trophy className="w-5 h-5 text-purple-500" />
+          <div className="w-10 h-10 rounded-lg border border-border-subtle bg-[#000d1a] flex items-center justify-center shrink-0">
+            <Trophy className="w-5 h-5 text-accent-primary" />
           </div>
         )}
         <div className="overflow-hidden">
-          <h4 className="text-sm font-semibold text-text-primary truncate">{hack.title}</h4>
+          <div className="flex items-center gap-1.5">
+            <h4 className="text-sm font-semibold text-text-primary truncate">{hack.title}</h4>
+            {hack.is_featured && (
+              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-accent-primary/15 border border-accent-primary/40 text-accent-primary shrink-0">
+                ★ Featured
+              </span>
+            )}
+          </div>
           <p className="text-[11px] text-text-tertiary">
             {hack.project_name ? `${hack.project_name} · ` : ''}{hack.organization} • {hack.date}
           </p>
         </div>
       </div>
       <div className="flex items-center gap-1 shrink-0 ml-2">
+        <button
+          type="button"
+          onClick={() => onToggleFeatured(hack)}
+          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            hack.is_featured
+              ? 'text-accent-primary bg-accent-primary/15 hover:bg-accent-primary/25'
+              : 'text-text-secondary hover:text-accent-primary hover:bg-accent-primary/10'
+          }`}
+          title={hack.is_featured ? 'Featured (Click to unfeature)' : 'Mark as Featured'}
+        >
+          <Star className={`w-3.5 h-3.5 ${hack.is_featured ? 'fill-accent-primary' : ''}`} />
+        </button>
         {hack.certificate_url && (
           <a href={hack.certificate_url} target="_blank" rel="noopener noreferrer"
             className="p-1.5 text-text-secondary hover:text-amber-500 hover:bg-amber-50 rounded-lg" title="View Certificate">
@@ -99,6 +124,7 @@ const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
           type="button"
           onClick={() => onEdit(hack)}
           className="p-1.5 text-text-secondary hover:text-accent-primary hover:bg-accent-light rounded-lg cursor-pointer"
+          title="Edit"
         >
           <Edit2 className="w-3.5 h-3.5" />
         </button>
@@ -106,6 +132,7 @@ const SortableHackItem = ({ hack, onEdit, onDelete }: HackItemProps) => {
           type="button"
           onClick={() => onDelete(hack)}
           className="p-1.5 text-text-secondary hover:text-error hover:bg-error/10 rounded-lg cursor-pointer"
+          title="Delete"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>
@@ -159,26 +186,43 @@ export const HackathonsManager = () => {
       certificate_url: '',
       thumbnail_url: '',
       gallery_urls: [],
+      is_featured: false,
     },
   });
 
   const watchCertUrl = watch('certificate_url');
   const watchThumbUrl = watch('thumbnail_url');
+  const watchFeatured = watch('is_featured') ?? false;
 
   const sensors = useSensors(useSensor(PointerSensor));
 
   const saveMutation = useMutation({
     mutationFn: async (formData: Partial<Hackathon>) => {
       const isNew = !editingHack;
-      const payload = {
+      const payload: any = {
         ...formData,
+        is_featured: formData.is_featured ?? false,
         gallery_urls: galleryUrls,
         display_order: editingHack?.display_order ?? hackathons.length,
         ...(editingHack ? { id: editingHack.id } : {}),
       };
 
-      const { data, error } = await supabase.from('hackathons').upsert(payload).select().single();
-      if (error) throw error;
+      let data = null;
+      const res = await supabase.from('hackathons').upsert(payload).select().single();
+      
+      if (res.error) {
+        if (res.error.message?.includes('is_featured') || res.error.code === 'PGRST204') {
+          delete payload.is_featured;
+          const retryRes = await supabase.from('hackathons').upsert(payload).select().single();
+          if (retryRes.error) throw retryRes.error;
+          data = retryRes.data;
+          toast('Saved! Run scripts/add-hackathon-featured.sql in Supabase to enable Featured in DB', { icon: '⚠️' });
+        } else {
+          throw res.error;
+        }
+      } else {
+        data = res.data;
+      }
 
       await supabase.from('activity_log').insert({
         entity_type: 'hackathons',
@@ -194,11 +238,47 @@ export const HackathonsManager = () => {
       setModalOpen(false);
       setEditingHack(null);
       setGalleryUrls([]);
-      reset({ title: '', organization: '', date: '', project_name: '', description: '', project_url: '', github_url: '', certificate_url: '', thumbnail_url: '', gallery_urls: [] });
+      reset({ title: '', organization: '', date: '', project_name: '', description: '', project_url: '', github_url: '', certificate_url: '', thumbnail_url: '', gallery_urls: [], is_featured: false });
       toast.success('Hackathon saved successfully');
     },
     onError: (err: any) => {
       toast.error(err.message || 'Failed to save hackathon');
+    },
+  });
+
+  const toggleFeaturedMutation = useMutation({
+    mutationFn: async (hack: Hackathon) => {
+      const nextVal = !hack.is_featured;
+      const { error } = await supabase
+        .from('hackathons')
+        .update({ is_featured: nextVal })
+        .eq('id', hack.id);
+
+      if (error) {
+        if (error.message?.includes('is_featured') || error.code === 'PGRST204') {
+          throw new Error("Please run 'scripts/add-hackathon-featured.sql' in Supabase SQL Editor first to add the column.");
+        }
+        throw error;
+      }
+      await revalidatePortfolio(['/']);
+    },
+    onMutate: async (hack) => {
+      await queryClient.cancelQueries({ queryKey: ['admin-hackathons'] });
+      const prev = queryClient.getQueryData<Hackathon[]>(['admin-hackathons']);
+      queryClient.setQueryData<Hackathon[]>(['admin-hackathons'], (old) =>
+        old?.map((h) => (h.id === hack.id ? { ...h, is_featured: !h.is_featured } : h))
+      );
+      return { prev };
+    },
+    onError: (err: any, hack, context) => {
+      if (context?.prev) {
+        queryClient.setQueryData(['admin-hackathons'], context.prev);
+      }
+      toast.error(err.message || 'Failed to update featured status');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-hackathons'] });
+      toast.success('Featured status updated');
     },
   });
 
@@ -251,14 +331,29 @@ export const HackathonsManager = () => {
   const handleEditClick = (hack: Hackathon) => {
     setEditingHack(hack);
     setGalleryUrls(hack.gallery_urls || []);
-    reset(hack);
+    reset({
+      ...hack,
+      is_featured: hack.is_featured ?? false,
+    });
     setModalOpen(true);
   };
 
   const handleAddClick = () => {
     setEditingHack(null);
     setGalleryUrls([]);
-    reset({ title: '', organization: '', date: '', project_name: '', description: '', project_url: '', github_url: '', certificate_url: '', thumbnail_url: '', gallery_urls: [] });
+    reset({
+      title: '',
+      organization: '',
+      date: '',
+      project_name: '',
+      description: '',
+      project_url: '',
+      github_url: '',
+      certificate_url: '',
+      thumbnail_url: '',
+      gallery_urls: [],
+      is_featured: false,
+    });
     setModalOpen(true);
   };
 
@@ -292,6 +387,7 @@ export const HackathonsManager = () => {
                   hack={hack}
                   onEdit={handleEditClick}
                   onDelete={(h) => setDeleteHack(h)}
+                  onToggleFeatured={(h) => toggleFeaturedMutation.mutate(h)}
                 />
               ))}
             </div>
@@ -307,6 +403,21 @@ export const HackathonsManager = () => {
         maxWidth="max-w-2xl"
       >
         <form onSubmit={handleSubmit((data) => saveMutation.mutate(data))} className="space-y-5">
+
+          {/* ── Featured Hackathon Toggle ── */}
+          <div className="p-3.5 border border-accent-primary/30 bg-accent-primary/5 rounded-xl flex items-center justify-between">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-1.5">
+                <Star className="w-4 h-4 text-accent-primary fill-accent-primary" />
+                <span className="text-xs font-semibold text-text-primary">Featured Hackathon</span>
+              </div>
+              <p className="text-[10px] text-text-tertiary">Promote to the spotlight showcase on your portfolio</p>
+            </div>
+            <Toggle
+              checked={watchFeatured}
+              onChange={(val) => setValue('is_featured', val)}
+            />
+          </div>
           
           {/* ── SECTION 1: Certificate ── */}
           <div className="pb-3 border-b border-border-subtle">

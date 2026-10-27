@@ -118,6 +118,7 @@ export interface Hackathon {
   certificate_url: string | null;
   thumbnail_url: string | null;
   gallery_urls: string[];
+  is_featured?: boolean;
   display_order: number;
   created_at: string;
   updated_at: string;

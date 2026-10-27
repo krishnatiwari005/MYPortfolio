@@ -81,106 +81,210 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, idx) => {
-              const isFirstFeatured = project.is_featured && idx === 0;
-
-              return (
-                <motion.div
-                  layout
-                  key={project.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  whileHover={{ y: -4 }}
-                  className={`group relative ${isFirstFeatured ? 'md:col-span-2 lg:col-span-3' : ''}`}
+        {/* ── FEATURED PROJECTS (Centered) ── */}
+        {filteredProjects.filter(p => p.is_featured).length > 0 && (
+          <div className="flex flex-col items-center gap-6">
+            {filteredProjects.filter(p => p.is_featured).map((project, idx) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                whileHover={{ y: -4 }}
+                transition={{ delay: idx * 0.1 }}
+                className="group relative w-full max-w-2xl"
+              >
+                {/* HUD Corner Accents */}
+                <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
+                
+                <div
+                  onClick={() => setSelectedProject(project)}
+                  className="h-full rounded-lg overflow-hidden cursor-pointer flex flex-col items-stretch p-0 border border-[#00e5ff]/30 bg-[#001a33]/90 shadow-[0_0_20px_rgba(0,229,255,0.15)] group-hover:border-[#00e5ff] group-hover:shadow-[0_0_30px_rgba(0,229,255,0.4)] transition-all duration-500 relative backdrop-blur-md"
                 >
-                  {/* HUD Corner Accents */}
-                  <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
-                  
-                  <div
-                    onClick={() => setSelectedProject(project)}
-                    className="h-full rounded-lg overflow-hidden cursor-pointer flex flex-col items-stretch p-0 border border-[#00e5ff]/30 bg-[#001a33]/90 shadow-[0_0_20px_rgba(0,229,255,0.15)] group-hover:border-[#00e5ff] group-hover:shadow-[0_0_30px_rgba(0,229,255,0.4)] transition-all duration-500 relative backdrop-blur-md"
-                  >
-                    {/* Scanline hover effect */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/20 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
+                  {/* Scanline hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/20 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
 
-                    {/* Thumbnail banner */}
-                    <div className={`relative overflow-hidden shrink-0 border-b border-[#00e5ff]/20 ${isFirstFeatured ? 'aspect-[21/9]' : 'aspect-video'}`}>
-                      {project.thumbnail_url ? (
-                        <img
-                          src={project.thumbnail_url}
-                          alt={project.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-[#000d1a] flex items-center justify-center">
-                          <ImageIcon className="w-12 h-12 text-[#00b4d8]" />
-                        </div>
-                      )}
-                      
-                      {/* Cyan Overlay Glitch on Hover */}
-                      <div className="absolute inset-0 bg-[#00e5ff] mix-blend-overlay opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-
-                      {/* Featured Star Badge */}
-                      {project.is_featured && (
-                        <div className="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-[#ff00ff] to-[#bd00ff] text-white text-[9px] font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(255,0,255,0.5)] flex items-center gap-1 z-10" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
-                          <span>★</span> Featured
-                        </div>
-                      )}
-
-                      {/* Hover Data Overlay */}
-                      <div className="absolute inset-0 bg-[#000d1a]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-[2px]">
-                        <span className="text-[10px] font-bold font-mono uppercase tracking-widest px-4 py-2 border border-[#00e5ff] bg-[#00e5ff]/20 text-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.6)]" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
-                          Initialize Data Sequence_
-                        </span>
+                  {/* Thumbnail banner */}
+                  <div className="relative overflow-hidden shrink-0 border-b border-[#00e5ff]/20 aspect-[16/9] max-h-[280px]">
+                    {project.thumbnail_url ? (
+                      <img
+                        src={project.thumbnail_url}
+                        alt={project.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#000d1a] flex items-center justify-center">
+                        <ImageIcon className="w-12 h-12 text-[#00b4d8]" />
                       </div>
+                    )}
+                    
+                    {/* Cyan Overlay Glitch on Hover */}
+                    <div className="absolute inset-0 bg-[#00e5ff] mix-blend-overlay opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+
+                    {/* Featured Star Badge */}
+                    <div className="absolute top-3 right-3 px-3 py-1 bg-gradient-to-r from-[#ff00ff] to-[#bd00ff] text-white text-[9px] font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(255,0,255,0.5)] flex items-center gap-1 z-10" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                      <span>★</span> Featured
                     </div>
 
-                    {/* Card Body */}
-                    <div className="p-6 flex-1 flex flex-col justify-between relative z-10 bg-gradient-to-b from-[#001a33]/50 to-[#000d1a]/80">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          {/* Category Neon Tag */}
-                          <div className="text-[9px] font-bold font-mono tracking-widest uppercase px-2.5 py-1 bg-[#ff00ff]/20 border border-[#ff00ff]/50 text-[#ffb3ff] shadow-[0_0_10px_rgba(255,0,255,0.2)]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
-                            {project.category}
-                          </div>
-                          <span className="text-[9px] font-bold font-mono text-[#00ff88] px-2 py-0.5 uppercase tracking-widest border-b border-[#00ff88]/50 shadow-[0_2px_4px_rgba(0,255,136,0.1)]">
-                            [{project.status}]
-                          </span>
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-bold font-display text-white group-hover:text-[#00e5ff] transition-colors leading-tight drop-shadow-md">{project.title}</h3>
-                        <p className="text-sm text-[#b2ebf2] leading-relaxed line-clamp-3 font-medium">
-                          {project.short_description}
-                        </p>
-                      </div>
-
-                      {/* Tech stack chips */}
-                      <div className="mt-6 space-y-4">
-                        {project.tech_stack.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {project.tech_stack.slice(0, 4).map((tech, tIdx) => (
-                              <span key={tIdx} className="text-[9px] font-bold font-mono tracking-wide uppercase px-2.5 py-1 bg-[#00e5ff]/10 border border-[#00e5ff]/40 text-[#80deea] shadow-[0_0_8px_rgba(0,229,255,0.1)]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
-                                {tech}
-                              </span>
-                            ))}
-                            {project.tech_stack.length > 4 && (
-                              <span className="text-[9px] font-bold font-mono px-2 py-1 bg-[#00e5ff]/20 text-[#00e5ff]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
-                                +{project.tech_stack.length - 4}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                    {/* Hover Data Overlay */}
+                    <div className="absolute inset-0 bg-[#000d1a]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-[2px]">
+                      <span className="text-[10px] font-bold font-mono uppercase tracking-widest px-4 py-2 border border-[#00e5ff] bg-[#00e5ff]/20 text-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.6)]" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
+                        Initialize Data Sequence_
+                      </span>
                     </div>
                   </div>
-                </motion.div>
-              );
-            })}
+
+                  {/* Card Body */}
+                  <div className="p-5 flex-1 flex flex-col justify-between relative z-10 bg-gradient-to-b from-[#001a33]/50 to-[#000d1a]/80">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="text-[9px] font-bold font-mono tracking-widest uppercase px-2.5 py-1 bg-[#ff00ff]/20 border border-[#ff00ff]/50 text-[#ffb3ff] shadow-[0_0_10px_rgba(255,0,255,0.2)]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                          {project.category}
+                        </div>
+                        <span className="text-[9px] font-bold font-mono text-[#00ff88] px-2 py-0.5 uppercase tracking-widest border-b border-[#00ff88]/50 shadow-[0_2px_4px_rgba(0,255,136,0.1)]">
+                          [{project.status}]
+                        </span>
+                      </div>
+                      <h3 className="text-lg md:text-xl font-bold font-display text-white group-hover:text-[#00e5ff] transition-colors leading-tight drop-shadow-md">{project.title}</h3>
+                      <p className="text-sm text-[#b2ebf2] leading-relaxed line-clamp-3 font-medium">
+                        {project.short_description}
+                      </p>
+                    </div>
+
+                    {/* Tech stack chips */}
+                    <div className="mt-4 space-y-4">
+                      {project.tech_stack.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {project.tech_stack.slice(0, 5).map((tech, tIdx) => (
+                            <span key={tIdx} className="text-[9px] font-bold font-mono tracking-wide uppercase px-2.5 py-1 bg-[#00e5ff]/10 border border-[#00e5ff]/40 text-[#80deea] shadow-[0_0_8px_rgba(0,229,255,0.1)]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                              {tech}
+                            </span>
+                          ))}
+                          {project.tech_stack.length > 5 && (
+                            <span className="text-[9px] font-bold font-mono px-2 py-1 bg-[#00e5ff]/20 text-[#00e5ff]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                              +{project.tech_stack.length - 5}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Divider between featured and standard ── */}
+        {filteredProjects.filter(p => p.is_featured).length > 0 && filteredProjects.filter(p => !p.is_featured).length > 0 && (
+          <div className="flex items-center gap-4 py-2">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#00e5ff]/30 to-transparent" />
+            <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-[#80deea] px-3 py-1 bg-[#001a33]/90 border border-[#00b4d8]/30 rounded-full flex items-center gap-1.5">
+              <Cpu className="w-3 h-3 text-[#00b4d8]" />
+              All Projects ({filteredProjects.filter(p => !p.is_featured).length})
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#00e5ff]/30 to-transparent" />
+          </div>
+        )}
+
+        {/* ── STANDARD PROJECTS GRID ── */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.filter(p => !p.is_featured).map((project, idx) => (
+              <motion.div
+                layout
+                key={project.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                whileHover={{ y: -4 }}
+                className="group relative"
+              >
+                {/* HUD Corner Accents */}
+                <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-[#00e5ff]/50 group-hover:border-[#00e5ff] transition-all z-20" />
+                
+                <div
+                  onClick={() => setSelectedProject(project)}
+                  className="h-full rounded-lg overflow-hidden cursor-pointer flex flex-col items-stretch p-0 border border-[#00e5ff]/30 bg-[#001a33]/90 shadow-[0_0_20px_rgba(0,229,255,0.15)] group-hover:border-[#00e5ff] group-hover:shadow-[0_0_30px_rgba(0,229,255,0.4)] transition-all duration-500 relative backdrop-blur-md"
+                >
+                  {/* Scanline hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00e5ff]/20 to-transparent h-[200%] -top-[100%] group-hover:animate-[scanline_2s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 z-0" />
+
+                  {/* Thumbnail banner */}
+                  <div className="relative overflow-hidden shrink-0 border-b border-[#00e5ff]/20 aspect-video">
+                    {project.thumbnail_url ? (
+                      <img
+                        src={project.thumbnail_url}
+                        alt={project.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#000d1a] flex items-center justify-center">
+                        <ImageIcon className="w-12 h-12 text-[#00b4d8]" />
+                      </div>
+                    )}
+                    
+                    {/* Cyan Overlay Glitch on Hover */}
+                    <div className="absolute inset-0 bg-[#00e5ff] mix-blend-overlay opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+
+                    {/* Featured Star Badge */}
+                    {project.is_featured && (
+                      <div className="absolute top-4 right-4 px-3 py-1 bg-gradient-to-r from-[#ff00ff] to-[#bd00ff] text-white text-[9px] font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(255,0,255,0.5)] flex items-center gap-1 z-10" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                        <span>★</span> Featured
+                      </div>
+                    )}
+
+                    {/* Hover Data Overlay */}
+                    <div className="absolute inset-0 bg-[#000d1a]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-[2px]">
+                      <span className="text-[10px] font-bold font-mono uppercase tracking-widest px-4 py-2 border border-[#00e5ff] bg-[#00e5ff]/20 text-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.6)]" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}>
+                        Initialize Data Sequence_
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-6 flex-1 flex flex-col justify-between relative z-10 bg-gradient-to-b from-[#001a33]/50 to-[#000d1a]/80">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        {/* Category Neon Tag */}
+                        <div className="text-[9px] font-bold font-mono tracking-widest uppercase px-2.5 py-1 bg-[#ff00ff]/20 border border-[#ff00ff]/50 text-[#ffb3ff] shadow-[0_0_10px_rgba(255,0,255,0.2)]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                          {project.category}
+                        </div>
+                        <span className="text-[9px] font-bold font-mono text-[#00ff88] px-2 py-0.5 uppercase tracking-widest border-b border-[#00ff88]/50 shadow-[0_2px_4px_rgba(0,255,136,0.1)]">
+                          [{project.status}]
+                        </span>
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-bold font-display text-white group-hover:text-[#00e5ff] transition-colors leading-tight drop-shadow-md">{project.title}</h3>
+                      <p className="text-sm text-[#b2ebf2] leading-relaxed line-clamp-3 font-medium">
+                        {project.short_description}
+                      </p>
+                    </div>
+
+                    {/* Tech stack chips */}
+                    <div className="mt-6 space-y-4">
+                      {project.tech_stack.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {project.tech_stack.slice(0, 4).map((tech, tIdx) => (
+                            <span key={tIdx} className="text-[9px] font-bold font-mono tracking-wide uppercase px-2.5 py-1 bg-[#00e5ff]/10 border border-[#00e5ff]/40 text-[#80deea] shadow-[0_0_8px_rgba(0,229,255,0.1)]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                              {tech}
+                            </span>
+                          ))}
+                          {project.tech_stack.length > 4 && (
+                            <span className="text-[9px] font-bold font-mono px-2 py-1 bg-[#00e5ff]/20 text-[#00e5ff]" style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}>
+                              +{project.tech_stack.length - 4}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </AnimatePresence>
         </motion.div>
       </div>

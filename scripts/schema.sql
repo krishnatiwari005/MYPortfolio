@@ -128,6 +128,7 @@ create table if not exists hackathons (
   project_url text,
   github_url text,
   certificate_url text,
+  is_featured boolean not null default false,
   display_order integer not null default 0,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
