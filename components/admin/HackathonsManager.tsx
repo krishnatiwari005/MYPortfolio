@@ -28,6 +28,8 @@ import {
 import {
   SortableContext,
   verticalListSortingStrategy,
+  rectSortingStrategy,
+  arrayMove,
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -141,19 +143,68 @@ const SortableHackItem = ({ hack, onEdit, onDelete, onToggleFeatured }: HackItem
   );
 };
 
-// Gallery image component
-const GalleryImageItem = ({ url, onRemove }: { url: string; onRemove: () => void }) => (
-  <div className="relative group rounded-lg overflow-hidden border border-border-subtle aspect-video bg-bg-primary">
-    <img src={url} alt="Gallery" className="w-full h-full object-cover" />
-    <button
-      type="button"
-      onClick={onRemove}
-      className="absolute top-1 right-1 p-1 bg-black/70 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+// Sortable Gallery image component
+interface SortableGalleryItemProps {
+  id: string;
+  url: string;
+  index: number;
+  onRemove: () => void;
+}
+
+const SortableGalleryItem = ({ id, url, index, onRemove }: SortableGalleryItemProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0.35 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`relative group rounded-lg overflow-hidden border aspect-video bg-[#000d1a] select-none transition-all ${
+        isDragging
+          ? 'border-accent-primary ring-2 ring-accent-primary/60 shadow-[0_0_20px_rgba(0,229,255,0.4)] scale-105'
+          : 'border-border-subtle hover:border-accent-primary/60 hover:shadow-[0_0_12px_rgba(0,229,255,0.15)]'
+      }`}
     >
-      <X className="w-3 h-3" />
-    </button>
-  </div>
-);
+      <img src={url} alt={`Gallery item ${index + 1}`} className="w-full h-full object-cover pointer-events-none" />
+
+      {/* Drag grip overlay */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute inset-0 cursor-grab active:cursor-grabbing flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <div className="px-2 py-1 rounded bg-[#000d1a]/90 border border-accent-primary/40 text-accent-primary flex items-center gap-1 text-[11px] font-mono shadow-md">
+          <GripVertical className="w-3.5 h-3.5" />
+          <span>Drag to move</span>
+        </div>
+      </div>
+
+      {/* Position Badge */}
+      <span className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#000d1a]/90 border border-accent-primary/30 text-accent-primary pointer-events-none shadow">
+        #{index + 1}
+      </span>
+
+      {/* Remove button */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
+        className="absolute top-1.5 right-1.5 p-1 bg-red-600/80 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20 cursor-pointer shadow-md"
+        title="Remove photo"
+      >
+        <X className="w-3 h-3" />
+      </button>
+    </div>
+  );
+};
 
 export const HackathonsManager = () => {
   const queryClient = useQueryClient();
@@ -194,7 +245,21 @@ export const HackathonsManager = () => {
   const watchThumbUrl = watch('thumbnail_url');
   const watchFeatured = watch('is_featured') ?? false;
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
+  const gallerySensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
 
   const saveMutation = useMutation({
     mutationFn: async (formData: Partial<Hackathon>) => {
@@ -326,6 +391,17 @@ export const HackathonsManager = () => {
     reordered.splice(newIndex, 0, removed);
     queryClient.setQueryData(['admin-hackathons'], reordered);
     orderMutation.mutate(reordered);
+  };
+
+  const handleGalleryDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setGalleryUrls((items) => {
+      const oldIndex = items.findIndex((url, i) => `${url}__${i}` === active.id);
+      const newIndex = items.findIndex((url, i) => `${url}__${i}` === over.id);
+      if (oldIndex === -1 || newIndex === -1) return items;
+      return arrayMove(items, oldIndex, newIndex);
+    });
   };
 
   const handleEditClick = (hack: Hackathon) => {
@@ -498,18 +574,38 @@ export const HackathonsManager = () => {
 
           {/* ── SECTION 5: Gallery ── */}
           <div className="space-y-3">
-            <p className="text-xs font-bold uppercase tracking-widest text-accent-primary">⑤ Project Gallery</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold uppercase tracking-widest text-accent-primary flex items-center gap-1.5">
+                <ImageIcon className="w-3.5 h-3.5" /> ⑤ Project Gallery ({galleryUrls.length})
+              </p>
+              {galleryUrls.length > 1 && (
+                <span className="text-[10px] font-mono text-text-tertiary flex items-center gap-1">
+                  <GripVertical className="w-3 h-3 text-accent-primary" /> Drag photos to fix order
+                </span>
+              )}
+            </div>
+
             {galleryUrls.length > 0 && (
-              <div className="grid grid-cols-3 gap-3">
-                {galleryUrls.map((url, idx) => (
-                  <GalleryImageItem
-                    key={idx}
-                    url={url}
-                    onRemove={() => setGalleryUrls((prev) => prev.filter((_, i) => i !== idx))}
-                  />
-                ))}
-              </div>
+              <DndContext sensors={gallerySensors} collisionDetection={closestCenter} onDragEnd={handleGalleryDragEnd}>
+                <SortableContext
+                  items={galleryUrls.map((url, idx) => `${url}__${idx}`)}
+                  strategy={rectSortingStrategy}
+                >
+                  <div className="grid grid-cols-3 gap-3 p-2.5 rounded-xl bg-[#000d1a]/50 border border-border-subtle">
+                    {galleryUrls.map((url, idx) => (
+                      <SortableGalleryItem
+                        key={`${url}__${idx}`}
+                        id={`${url}__${idx}`}
+                        url={url}
+                        index={idx}
+                        onRemove={() => setGalleryUrls((prev) => prev.filter((_, i) => i !== idx))}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             )}
+
             <div className="space-y-1">
               <label className="text-xs font-semibold text-text-secondary flex items-center gap-1.5">
                 <ImageIcon className="w-3.5 h-3.5" /> Add Gallery Image
@@ -520,7 +616,9 @@ export const HackathonsManager = () => {
                 value=""
                 onUploadComplete={(url) => setGalleryUrls((prev) => [...prev, url])}
               />
-              <p className="text-[10px] text-text-tertiary">Upload multiple images one by one. They will appear in a gallery inside the details panel.</p>
+              <p className="text-[10px] text-text-tertiary">
+                Upload multiple images one by one. Drag & drop images above to rearrange their order. They will appear in a floating circular marquee inside the hackathon details.
+              </p>
             </div>
           </div>
 

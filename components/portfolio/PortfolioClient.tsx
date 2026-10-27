@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 // Components
@@ -61,15 +61,23 @@ export default function PortfolioClient({
     }
   }, [isAdmin]);
 
-  // Mouse Follow Glow Effect Listener
+  // Mouse Follow Glow Effect Listener (rAF throttled to prevent scroll stutter)
   useEffect(() => {
+    let rafId: number | null = null;
     const handleMouseMove = (e: MouseEvent) => {
-      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+        rafId = null;
+      });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const handleHireMeClick = () => {
@@ -84,8 +92,22 @@ export default function PortfolioClient({
     ? hero.name.split(' ').map((n) => n[0]).join('')
     : 'JD';
 
+  // Smooth Hardware-Accelerated Scroll Progress Indicator
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   return (
     <>
+      {/* Top Cybernetic Scroll Progress Laser */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#00b4d8] via-[#00e5ff] to-[#00ff88] origin-left z-[99999] shadow-[0_0_15px_rgba(0,229,255,0.7)] pointer-events-none"
+        style={{ scaleX }}
+      />
+
       <AnimatePresence>
         {showWelcome && (
           <WelcomeScreen

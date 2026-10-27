@@ -34,7 +34,18 @@
   --mouse-y: 50%;
 }
 
-/* Base Body Styles */
+/* Base HTML & Body Styles */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
@@ -195,5 +206,101 @@ body::before {
     width: 100%;
   }
 }
+
+/* Infinite floating circular gallery (Right to Left - Hardware Accelerated Butter-Smooth Flow) */
+@keyframes float-gallery-rtl {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.animate-float-gallery {
+  display: flex;
+  width: max-content;
+  animation: float-gallery-rtl 40s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.pause-on-hover:hover .animate-float-gallery,
+.animate-float-gallery:hover {
+  animation-play-state: paused;
+}
+
+/* ── GLOBAL SEAMLESS CYBERPUNK SCROLLBAR (Eliminates OS white scroller) ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00e5ff #000d1a;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000d1a;
+  border-left: 1px solid rgba(0, 229, 255, 0.08);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00b4d8 0%, #00e5ff 100%);
+  border-radius: 9999px;
+  border: 2px solid #000d1a;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.45);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00e5ff 0%, #00ff88 100%);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.9);
+}
+
+::-webkit-scrollbar-corner {
+  background: #000d1a;
+}
+
+/* Custom slim cyberpunk scrollbar for modals & nested containers */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 180, 216, 0.4) rgba(0, 13, 26, 0.6);
+  overscroll-behavior: contain;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 13, 26, 0.6);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 216, 0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-gallery {
+    animation: none;
+    overflow-x: auto;
+  }
+}
+
 
 

@@ -1,7 +1,7 @@
 'use client';
 // Cache-bust comment: cyberpunk-certs-hackathons-v2-mobile-2col
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Certificate, Hackathon } from '@/types';
 import { ExternalLink, X, Download, Award, Trophy, GitBranch, Globe, Image as ImageIcon, Star, Eye } from 'lucide-react';
@@ -14,13 +14,26 @@ export interface CertificatesSectionProps {
 export const CertificatesSection = ({ certificates, hackathons }: CertificatesSectionProps) => {
   const [activeLightbox, setActiveLightbox] = useState<Certificate | null>(null);
   const [activeHackathonLightbox, setActiveHackathonLightbox] = useState<Hackathon | null>(null);
+  const [fullscreenGalleryImage, setFullscreenGalleryImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'certificates' | 'hackathons'>('certificates');
 
   const featuredHackathons = hackathons.filter((h) => Boolean(h.is_featured));
   const standardHackathons = hackathons.filter((h) => !h.is_featured);
 
+  // Focus trap & body scroll lock to prevent scroll-fight and hanging when modal is open
+  useEffect(() => {
+    if (activeLightbox || activeHackathonLightbox || fullscreenGalleryImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [activeLightbox, activeHackathonLightbox, fullscreenGalleryImage]);
+
   return (
-    <section id="certificates" className={`py-10 md:py-20 relative scroll-mt-12 ${(activeLightbox || activeHackathonLightbox) ? 'z-[999]' : 'z-10'}`}>
+    <section id="certificates" className={`py-10 md:py-20 relative scroll-mt-12 ${(activeLightbox || activeHackathonLightbox || fullscreenGalleryImage) ? 'z-[999]' : 'z-10'}`}>
       <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12 space-y-10 md:space-y-12">
 
         {/* Section Header */}
@@ -131,7 +144,7 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="space-y-8 sm:space-y-12"
+              className="space-y-6 sm:space-y-8"
             >
               {hackathons.length === 0 ? (
                 <div className="text-center py-16 border border-dashed border-[#00b4d8]/20 text-[#00b4d8] text-xs font-mono uppercase tracking-widest">
@@ -262,7 +275,7 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
 
                                     {/* Gallery Strip */}
                                     {hack.gallery_urls && hack.gallery_urls.length > 0 && (
-                                      <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-none pt-0.5">
+                                      <div className="flex gap-1.5 overflow-x-auto scroll-smooth pb-0.5 scrollbar-none pt-0.5">
                                         {hack.gallery_urls.slice(0, 4).map((url, gIdx) => (
                                           <div
                                             key={gIdx}
@@ -328,17 +341,7 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
                     </div>
                   )}
 
-                  {/* ── SECTION DIVIDER (if both featured and standard exist) ── */}
-                  {featuredHackathons.length > 0 && standardHackathons.length > 0 && (
-                    <div className="pt-4 pb-2 flex items-center gap-4">
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#00b4d8]/40 to-transparent" />
-                      <span className="text-[11px] font-mono font-bold tracking-widest uppercase text-[#80deea] px-3.5 py-1 bg-[#001a33]/90 border border-[#00b4d8]/30 rounded-full flex items-center gap-2 shadow-sm">
-                        <Award className="w-3.5 h-3.5 text-[#00b4d8]" />
-                        All Hackathons & Participations ({standardHackathons.length})
-                      </span>
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#00b4d8]/40 to-transparent" />
-                    </div>
-                  )}
+
 
                   {/* ── STANDARD HACKATHONS GRID ── */}
                   {standardHackathons.length > 0 && (
@@ -517,7 +520,8 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative max-w-3xl w-full bg-[#001a33]/95 backdrop-blur-xl border-2 border-[#00b4d8]/40 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(0,180,216,0.2)] z-10 flex flex-col max-h-[92vh]"
+              className="relative max-w-3xl w-full bg-[#001326] border-2 border-[#00b4d8]/40 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(0,180,216,0.25)] z-10 flex flex-col max-h-[92vh]"
+              style={{ transform: 'translateZ(0)' }}
             >
               {/* HUD Corner Accents */}
               <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-[#00b4d8] z-20 pointer-events-none" />
@@ -545,8 +549,11 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
                 </button>
               </div>
 
-              {/* Hackathon details body */}
-              <div className="flex-1 min-h-0 overflow-y-auto bg-[#000d1a]/50 p-4 sm:p-6 space-y-5">
+              {/* Hackathon details body - native smooth scroll without wheel event lockup */}
+              <div
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain custom-scrollbar bg-[#000d1a]/80 p-4 sm:p-6 space-y-5"
+                style={{ willChange: 'scroll-position', WebkitOverflowScrolling: 'touch' }}
+              >
 
                 {/* ── 1. CERTIFICATE ── */}
                 {activeHackathonLightbox.certificate_url && (
@@ -627,27 +634,134 @@ export const CertificatesSection = ({ certificates, hackathons }: CertificatesSe
                 )}
 
                 {/* ── 4. GALLERY ── */}
-                {activeHackathonLightbox.gallery_urls && activeHackathonLightbox.gallery_urls.length > 0 && (
-                  <div className="space-y-2.5">
-                    <div className="w-full h-px bg-gradient-to-r from-[#00b4d8]/30 via-[#00b4d8]/10 to-transparent" />
-                    <p className="text-[9px] sm:text-[10px] font-bold font-mono text-[#00b4d8] uppercase tracking-widest flex items-center gap-1.5">
-                      <ImageIcon className="w-3.5 h-3.5" /> Project Gallery
-                    </p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                      {activeHackathonLightbox.gallery_urls.map((url, idx) => (
-                        <div key={idx} className="aspect-video bg-[#000d1a] border border-[#00b4d8]/10 rounded-lg overflow-hidden cursor-pointer group">
-                          <img
-                            src={url}
-                            alt={`Gallery ${idx + 1}`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {activeHackathonLightbox.gallery_urls && activeHackathonLightbox.gallery_urls.length > 0 && (() => {
+                  const baseItems = activeHackathonLightbox.gallery_urls;
+                  // Ensure at least 8 items per track to guarantee seamless marquee width across all screen sizes
+                  const repeatCount = Math.max(1, Math.ceil(8 / baseItems.length));
+                  const trackItems = Array.from({ length: repeatCount }, () => baseItems).flat();
+                  // Calibrate speed so it glides smoothly at a comfortable ~55px/s regardless of item count
+                  const trackDuration = `${Math.max(38, trackItems.length * 4.5)}s`;
 
+                  return (
+                    <div className="space-y-3">
+                      <div className="w-full h-px bg-gradient-to-r from-[#00b4d8]/30 via-[#00b4d8]/10 to-transparent" />
+                      <div className="flex items-center justify-between">
+                        <p className="text-[9px] sm:text-[10px] font-bold font-mono text-[#00b4d8] uppercase tracking-widest flex items-center gap-1.5">
+                          <ImageIcon className="w-3.5 h-3.5" /> Project Gallery ({baseItems.length})
+                        </p>
+                        <span className="text-[8px] sm:text-[9px] font-mono text-[#80deea]/70 flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] animate-pulse" />
+                          Floating R→L • Hover to pause • Click to zoom
+                        </span>
+                      </div>
+
+                      {/* Infinite Circular Floating Marquee Track (Right to Left) */}
+                      <div className="relative w-full overflow-hidden rounded-xl border border-[#00b4d8]/25 bg-[#000d1a]/80 p-2.5 group/marquee shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+                        {/* Gradient edge fades for seamless cinema entrance and exit */}
+                        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#000d1a] to-transparent z-10 pointer-events-none" />
+                        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#000d1a] to-transparent z-10 pointer-events-none" />
+
+                        <div className="flex overflow-hidden pause-on-hover select-none py-1">
+                          {/* Track 1 */}
+                          <div
+                            className="flex shrink-0 gap-3 pr-3 animate-float-gallery"
+                            style={{ animationDuration: trackDuration }}
+                          >
+                            {trackItems.map((url, idx) => (
+                              <div
+                                key={`track1-${idx}`}
+                                onClick={() => setFullscreenGalleryImage(url)}
+                                className="relative w-48 sm:w-64 aspect-video shrink-0 bg-[#000d1a] border border-[#00b4d8]/30 hover:border-[#00e5ff] rounded-lg overflow-hidden cursor-pointer group/card transition-all duration-300 shadow-[0_0_15px_rgba(0,180,216,0.12)] hover:shadow-[0_0_25px_rgba(0,229,255,0.4)]"
+                                style={{ transform: 'translateZ(0)' }}
+                              >
+                                <img
+                                  src={url}
+                                  alt={`Project photo ${(idx % baseItems.length) + 1}`}
+                                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
+                                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#000d1a]/80 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity flex items-end justify-between p-2">
+                                  <span className="text-[10px] font-mono font-bold text-[#00e5ff] flex items-center gap-1">
+                                    <Eye className="w-3 h-3" /> Zoom
+                                  </span>
+                                  <span className="text-[9px] font-mono text-[#80deea]">
+                                    #{(idx % baseItems.length) + 1}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Track 2 (identically repeated for 100% seamless circular infinite loop) */}
+                          <div
+                            className="flex shrink-0 gap-3 pr-3 animate-float-gallery"
+                            aria-hidden="true"
+                            style={{ animationDuration: trackDuration }}
+                          >
+                            {trackItems.map((url, idx) => (
+                              <div
+                                key={`track2-${idx}`}
+                                onClick={() => setFullscreenGalleryImage(url)}
+                                className="relative w-48 sm:w-64 aspect-video shrink-0 bg-[#000d1a] border border-[#00b4d8]/30 hover:border-[#00e5ff] rounded-lg overflow-hidden cursor-pointer group/card transition-all duration-300 shadow-[0_0_15px_rgba(0,180,216,0.12)] hover:shadow-[0_0_25px_rgba(0,229,255,0.4)]"
+                                style={{ transform: 'translateZ(0)' }}
+                              >
+                                <img
+                                  src={url}
+                                  alt={`Project photo ${(idx % baseItems.length) + 1}`}
+                                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
+                                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#000d1a]/80 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity flex items-end justify-between p-2">
+                                  <span className="text-[10px] font-mono font-bold text-[#00e5ff] flex items-center gap-1">
+                                    <Eye className="w-3 h-3" /> Zoom
+                                  </span>
+                                  <span className="text-[9px] font-mono text-[#80deea]">
+                                    #{(idx % baseItems.length) + 1}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen Photo Lightbox from Hackathon Gallery */}
+      <AnimatePresence>
+        {fullscreenGalleryImage && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6">
+            <div
+              className="fixed inset-0 bg-black/90 backdrop-blur-md cursor-zoom-out"
+              onClick={() => setFullscreenGalleryImage(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="relative max-w-4xl max-h-[85vh] z-10 flex flex-col items-center"
+            >
+              <div className="relative rounded-xl overflow-hidden border-2 border-[#00e5ff]/50 shadow-[0_0_50px_rgba(0,229,255,0.3)] bg-[#000d1a]">
+                <img
+                  src={fullscreenGalleryImage}
+                  alt="Expanded gallery photo"
+                  className="max-h-[80vh] w-auto max-w-full object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => setFullscreenGalleryImage(null)}
+                  className="absolute top-3 right-3 p-2 bg-[#000d1a]/80 hover:bg-[#ff003c]/20 text-[#00e5ff] hover:text-[#ff003c] border border-[#00e5ff]/40 hover:border-[#ff003c] transition-all cursor-pointer shadow-lg"
+                  style={{ clipPath: 'polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%)' }}
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             </motion.div>
           </div>
