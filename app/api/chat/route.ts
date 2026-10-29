@@ -1,5 +1,5 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { generateText } from 'ai';
+import { streamText } from 'ai';
 import {
   getHero,
   getAbout,
@@ -10,6 +10,7 @@ import {
   getHackathons,
   getResume,
 } from '@/lib/supabase/queries';
+import { getLiveLeetCodeStats } from '@/lib/leetcode';
 import { NextResponse } from 'next/server';
 
 const groq = createOpenAI({
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
     }
 
-    // Fetch all portfolio data in parallel to provide complete context
+    // Fetch all portfolio data and live LeetCode stats in parallel
     const [hero, about, skills, experience, projects, certificates, hackathons, resume] =
       await Promise.all([
         getHero(),
@@ -44,6 +45,8 @@ export async function POST(req: Request) {
         getHackathons(),
         getResume(),
       ]);
+
+    const leetcodeStats = await getLiveLeetCodeStats(hero?.leetcode_url || 'Krishna_Tiwari005');
 
     const statsSummary = [
       hero?.stat_1_label && hero?.stat_1_value ? `${hero.stat_1_label}: ${hero.stat_1_value}` : null,
@@ -113,6 +116,19 @@ export async function POST(req: Request) {
           .join('\n\n')
       : 'None listed';
 
+    const leetcodeDetails = leetcodeStats
+      ? `- Status: LIVE REAL-TIME DATA FETCHED DIRECTLY FROM LEETCODE API (Do NOT cite old static placeholder values!)
+- LeetCode Username: ${leetcodeStats.username}
+- Total Solved: ${leetcodeStats.totalSolved} problems (Easy: ${leetcodeStats.easySolved} | Medium: ${leetcodeStats.mediumSolved} | Hard: ${leetcodeStats.hardSolved})
+- Total Submissions: ${leetcodeStats.totalSubmissions.toLocaleString()}
+- Global Profile Ranking: #${leetcodeStats.ranking.toLocaleString()}
+- Contest Rating: ${leetcodeStats.contestRating} (${leetcodeStats.attendedContestsCount} contests attended, Global Rank #${leetcodeStats.contestGlobalRanking.toLocaleString()}, Top ${leetcodeStats.contestTopPercentage}%)
+- Earned Badges: ${leetcodeStats.badges.join(', ') || '200 Days Badge 2026, 100 Days Badge 2026, 50 Days Badge 2026'}
+- Direct Profile Link: [LeetCode Profile](${leetcodeStats.profileUrl})`
+      : `- LeetCode Profile: [LeetCode Profile](${hero?.leetcode_url || 'https://leetcode.com/u/Krishna_Tiwari005/'})
+- Total Solved: 378+ problems solved (Easy, Medium, Hard)
+- Highlights: ${statsSummary || 'Consistent Problem Solver | Contests | 8+ CGPA'}`;
+
     const systemMessage = `You are KrisNova, a warm, intelligent, and highly capable AI assistant on ${
       hero?.name || 'the developer'
     }'s portfolio website. Your role is to help recruiters, hiring managers, and visitors learn everything about ${
@@ -121,11 +137,22 @@ export async function POST(req: Request) {
 
 TONE & STYLE GUIDELINES:
 - Be warm, professional, articulate, and conversational.
-- Keep answers clear and digestible (2–5 lines or short, structured bullet points). Avoid overwhelming walls of text.
-- **IMPORTANT – LINK FORMATTING**: Always format URLs as markdown hyperlinks using [label](url) syntax (e.g. [View Certificate](https://...)), NOT as raw URLs. This makes them clickable in the chat interface.
-- If asked about LeetCode, DSA, or problem-solving: enthusiastically highlight problem-solving stats, contest experience, consistency, algorithmic strengths, and share the LeetCode profile link formatted as [LeetCode Profile](url).
-- If asked about Certifications & Hackathons: give exact certification titles, issuing bodies (e.g. AWS, Meta, Linux Foundation, Coursera), dates, and format credential links as [Verify Credential](url).
-- If asked about Resume / CV / Education / Work History: summarize relevant qualifications, degree/education, career interests, tech stack, and mention they can download the full resume formatted as [Download Resume](${resume?.file_url || '#'}).
+- Keep answers clear, digestible, and well-spaced. Avoid overwhelming walls of text.
+- **CRITICAL FORMATTING RULE (NO RAW TABLES)**: The chat interface is a compact messenger window. NEVER output raw multi-column markdown tables (like | Col 1 | Col 2 | Col 3 |). They look cluttered and unreadable in mobile chat windows.
+- **ALWAYS USE CLEAN BULLET CARDS**: Format lists (certifications, experience, projects, stats) as clean, spaced bullet cards:
+  Example for Certifications:
+  • **AI-Agent Using AGNO** — *CampusX* (September 2026)
+    [Verify Credential](https://...)
+  Example for LeetCode / DSA:
+  • **Total Problems Solved**: ${leetcodeStats?.totalSolved ?? 378} (Easy: ${leetcodeStats?.easySolved ?? 285} • Medium: ${leetcodeStats?.mediumSolved ?? 83} • Hard: ${leetcodeStats?.hardSolved ?? 10})
+  • **Contest Rating**: ${leetcodeStats?.contestRating ?? 1215} (${leetcodeStats?.attendedContestsCount ?? 11} Contests)
+  • **Global Profile Ranking**: #${(leetcodeStats?.ranking ?? 361973).toLocaleString()}
+  • **Badges**: ${leetcodeStats?.badges.join(', ') || '200 Days Badge, 100 Days Badge, 50 Days Badge'}
+  • [View LeetCode Profile](${leetcodeStats?.profileUrl || hero?.leetcode_url || 'https://leetcode.com/u/Krishna_Tiwari005/'})
+- **IMPORTANT – LINK FORMATTING**: Always format URLs as markdown hyperlinks using [label](url) syntax (e.g. [View Certificate](https://...)), NEVER as raw URLs.
+- If asked about LeetCode, DSA, or problem-solving: ALWAYS provide the EXACT LIVE numbers listed above. Highlight the problem difficulty breakdown, consistency badges, and contest participation.
+- If asked about Certifications & Hackathons: give exact certification titles, issuing bodies, dates, and format credential links as [Verify Credential](url).
+- If asked about Resume / CV / Education / Work History: summarize relevant qualifications and mention they can download the full resume formatted as [Download Resume](${resume?.file_url || '#'}).
 - NEVER give out the email address unless the visitor explicitly asks "how can I contact", "what is the email", or similar contact questions.
 - If asked something completely outside the portfolio and developer background, politely clarify that you specialize in ${
       hero?.name?.split(' ')[0] || 'the developer'
@@ -147,10 +174,9 @@ DEVELOPER & PORTFOLIO DATA CONTEXT:
 - Career Interests: ${about?.career_interests || 'AI/ML, Web Systems, Cloud'}
 - Bio: ${stripHtml(about?.bio)}
 
-2. LEETCODE & PROBLEM SOLVING STATS:
-- LeetCode Profile URL: ${hero?.leetcode_url || 'https://leetcode.com'}
-- Key Highlights & Telemetry: ${statsSummary || '300+ Problems Solved | 10+ Contests | 10+ Projects | 8+ CGPA'}
-- Problem Solving Skills: Data Structures & Algorithms, Competitive Programming, Optimization, Graph & Dynamic Programming, System Design.
+2. LEETCODE & PROBLEM SOLVING STATS (LIVE DATA):
+${leetcodeDetails}
+- Problem Solving Strengths: Data Structures & Algorithms, Dynamic Programming, Graphs, Optimization, System Design, Competitive Programming.
 
 3. CERTIFICATIONS & CREDENTIALS:
 ${certificatesList}
@@ -182,13 +208,13 @@ ${projectsList}
 
 Answer user inquiries accurately using this authentic context!`;
 
-    const { text } = await generateText({
+    const result = streamText({
       model: groq('openai/gpt-oss-120b'),
       system: systemMessage,
       messages,
     });
 
-    return NextResponse.json({ content: text });
+    return result.toTextStreamResponse();
   } catch (error: unknown) {
     console.error('[Chat API Error]:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
